@@ -1,2 +1,1 @@
-# bifuz
-Broadcast Intent FUZzing Framework for Android
+# BIFUZ - Broadcast Intent FUZzing Framework for Android
