@@ -39,9 +39,9 @@ def parse_logcat(ip, log_filename, generated_intents_file):
                     pass
     if not error:
         os.remove(log_filename)
-        return False
+        return True
     if package_name and new_name:
-        new_name = new_name.replace('!@#$%^&*()[]{};:,/<>?\|`~-=_+', '')
+        new_name = re.sub('\W+','',new_name)
         partial_name =  broadcast_to + "." + new_name
         new_filename = root_path + "/e_" +  partial_name + ".txt"
         os.rename(log_filename, new_filename)
@@ -56,12 +56,13 @@ def parse_receiver_resolver(data, package_name):
     data = data[index_resv:]
 
     data = data.split("\r\n")
-    while_lines = [i for i in range(len(data)) if data[i] == '']
-    data = data[:while_lines[1]]
+    while_lines = [i for i in range(len(data)-1) if data[i] == '' and data[i+1].lstrip() ==  data[i+1]]
+    data = data[:while_lines[0]]
     package_list = []
+    print data
 
     for i in range(len(data)):
-        m = re.search("\d+\w+\s(.*)\sfilter", data[i])
+        m = re.search("\d+\w+\s("+package_name+"\S*)", data[i])
         try:
             part_line = m.group(1)
         except:
@@ -72,7 +73,7 @@ def parse_receiver_resolver(data, package_name):
         if index_sl != -1:
             part_line = part_line[index_sl+1:]
         package_list.append(part_line)
-
+    print package_list, "!! --- "
     package_list = sorted(set(package_list))
     packages_broadcast[package_name] = package_list
     return True
@@ -91,19 +92,21 @@ def create_run_file(ip, log_dir):
     return True
 
 
-def start_broadcast_fuzzer(ip, log_dir):
-    if not os.path.isfile(log_dir + '/all_broadcasts_' + ip + '.sh'):
+def start_broadcast_fuzzer(ip, log_dir, generated_intents_file = None):
+    if generated_intents_file is None:
+        generated_intents_file = log_dir + '/all_broadcasts_' + ip + '.sh'
+
+    if not os.path.isfile(generated_intents_file):
         print "The broadcast calls were not generated!"
         return False
 
-    generated_intents_file = log_dir + '/all_broadcasts_' + ip + '.sh'
     with open(generated_intents_file, 'r') as f:
         run_inadb(ip, "logcat -c")
         i = 0
         for line in f:
             # clean logcat
-            log_in_logcat(ip, 'BIFUZ_BROADCAST ' + line)
-            os.system(line)
+            log_in_logcat(ip, 'BIFUZ_BROADCAST ' + line.strip())
+            os.system(line.strip())
 
             log_filename = "%s/testfile_%s_%d.txt"%(log_dir, ip, i)
             run_result = run_inadb(ip, 'logcat -d > ' + log_filename)
@@ -118,7 +121,7 @@ def start_broadcast_fuzzer(ip, log_dir):
 
             run_inadb(ip, "logcat -c")
             i = i + 1
-    os.system("rm " + log_dir + "/package_*")
+    res = getoutput("rm " + log_dir + "/package_*")
     return True
 
 
