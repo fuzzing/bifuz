@@ -82,10 +82,15 @@ if __name__ == '__main__':
                 print str(i+1) + ". " + devices_list[i]
 
             duts = str(raw_input("Select the DUT number or type 'all':    "))
-            if duts is not 'all':
+            if (duts == 'all'):
+				print devices_list
+            elif (isinstance(duts,int) and (int(duts)>=1) and (int(duts)<=len(devices_list))):
                 duts_list = re.split(r'[,. ]+', duts)
                 devices_list = [devices_list[int(x)-1] for x in duts_list if int(x) > 0 and int(x) <= len(devices_list)]
-
+            else:
+                print "Invalid option! Select the DUT number or type 'all'"
+                loop = True
+                continue
             print_menu()
             if len(devices_list) > 0:
                 print ("Selected DUT(s): " + ', '.join(devices_list))
