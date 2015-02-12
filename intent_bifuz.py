@@ -171,7 +171,7 @@ def parse_dumpsys(data, line):
 def collect_info(ip, log_dir, selected_packages):
 
     lines = get_package_list(ip, log_dir, selected_packages)
-    if not linesu:
+    if not lines:
         log_in_logcat(ip, 'BIFUZ_INTENT no valid packages. STOP!')
         sys.exit(1)
 
