@@ -41,7 +41,7 @@ def parse_logcat(ip, log_filename, generated_intents_file):
         os.remove(log_filename)
         return True
     if package_name and new_name:
-        new_name = re.sub('\W+','',new_name)
+        new_name = re.sub('\W+', '', new_name)
         partial_name =  broadcast_to + "." + new_name
         new_filename = root_path + "/e_" +  partial_name + ".txt"
         os.rename(log_filename, new_filename)

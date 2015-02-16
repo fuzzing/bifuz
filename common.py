@@ -55,7 +55,7 @@ def get_package_list(ip, log_dir, selected_packages):
             lines.extend(output.split('\r\n'))
             lines[-1] = lines[-1].replace('\r', '')
     else:
-        partial_pks = re.split(r'[,. ]+', selected_packages)
+        partial_pks = re.split(r'[, ]+', selected_packages)
         for pkg in partial_pks:
             output = run_inadb(ip, 'shell pm list packages | grep ' + pkg)
             run_inadb(ip, 'shell pm list packages | grep ' + pkg + " >> " +  log_dir + '/list_packages.txt')

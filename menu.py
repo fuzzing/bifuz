@@ -57,7 +57,7 @@ def print_menu():
     print(k/2*" "+"2. Generate Broadcast Intent calls for the DUT(s)")
     print(k/2*" "+"3. Generate Fuzzed Intent calls")
     print(k/2*" "+"4. Generate a delta report between 2 fuzzing sessions")
-    print(k/2*" "+"5. Run already generated intents")
+    print(k/2*" "+"5. Run existing generated intents from file")
     print(k/2*" "+"6. (Future) Generate apks for specific Intent calls")
     print(k/2*" "+"Q. Quit")
     print("\n\n");
@@ -81,15 +81,14 @@ if __name__ == '__main__':
             for i in range(len(devices_list)):
                 print str(i+1) + ". " + devices_list[i]
 
-            duts = str(raw_input("Select the DUT number(s) separated by comma or type 'all':    "))
+            duts = str(raw_input("Select the DUT number(s) separated by comma or type 'all': "))
             for d in duts.split(','):
                 if d.isdigit():
-                   duts_list = re.split(r'[,. ]+', duts)
-                   devices_list = [devices_list[int(x)-1] for x in duts_list if int(x) > 0 and int(x) <= len(devices_list)]
-            
+                    duts_list = re.split(r'[,. ]+', duts)
+                    devices_list = [devices_list[int(x)-1] for x in duts_list if int(x) > 0 and int(x) <= len(devices_list)]
             if len(devices_list) > 0:
                 print ("Selected DUT(s): " + ', '.join(devices_list))
-            choice = str(raw_input("Insert your choice:    "))
+            choice = str(raw_input("Insert your choice: "))
         elif (choice=="2"):
             if len(devices_list) == 0:
                 devices_list = get_devices_list()
@@ -138,7 +137,7 @@ if __name__ == '__main__':
             delta_reports(session_one.strip(), session_two.strip())
             loop = False
         elif (choice=="5"):
-            print("\nYou have selected option 5. Run already generated intents.")
+            print("\nYou have selected option 5. Run existing generated intents from file.")
             intents_file = str(raw_input("Insert the absolute path of the file containing the intents:  "))
             #for testing reasons, to be deleted
             #intents_file = "/home/andreeab/negative/bifuz/LOGS_6173B162_0126_19-37_broadcast/all_broadcasts_6173B162.sh"
@@ -149,11 +148,11 @@ if __name__ == '__main__':
                 get_intent_type(intents_file.strip())
                 loop = False
         elif (choice=="6"):
-            print("\nYou have selected option 6. (Future) Generate apks for specific Intent calls")
+            print("\nYou have selected option 5. (Future) Generate apks for specific Intent calls")
             loop = False
         elif (str(choice) in ['q','Q']):
             print("\nThank you for using BIFUZ!")
             loop = False
         elif (choice !=""):
-            print("\nYour option is invalid. Please type any number between 1 and 6, or Q for Quit")
+            print("\nYour option is invalid. Please type any number between 1 and 5, or Q for Quit")
             choice = str(raw_input("Insert your choice:    "))

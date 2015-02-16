@@ -84,7 +84,7 @@ def parse_logcat(ip, log_filename):
         os.remove(log_filename)
         return True
     if package_name and new_name:
-        new_filename = re.sub('\W+','',new_filename)
+        new_filename = re.sub('\W+', '', new_name)
         new_filename = root_path + "/e_" + activity + "." + new_name
         if new_filename in created_logfiles.keys():
             created_logfiles[new_filename] += 1
@@ -231,8 +231,8 @@ def start_intent_fuzzer(ip, log_dir, generated_intents_file = None):
         i = 0
         for line in f:
             # clean logcat
-            log_in_logcat(ip, 'BIFUZ_INTENT ' + line)
-            outp_f = getoutput(line)
+            log_in_logcat(ip, 'BIFUZ_INTENT ' + line.strip())
+            os.system(line.strip())
 
             log_filename = "%s/testfile_%s_%d.txt"%(log_dir, ip, i)
             run_result = run_inadb(ip, 'logcat -d > ' + log_filename)
