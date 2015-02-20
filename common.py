@@ -162,7 +162,7 @@ def reproducibility(intents_f, partial_name, crashed_intent):
     intents_file = open(intents_f, 'r')
     for line in intents_file:
         before_crash_f.write(line)
-        if line.strip() in crashed_intent.strip()
+        if line.strip() in crashed_intent.strip():
             break
     before_crash_f.close()
     intents_file.close()
