@@ -157,14 +157,12 @@ def delta_reports(session_one, session_two):
 def reproducibility(intents_f, partial_name, crashed_intent):
     root_index = intents_f.rfind('/all_')
     root_path = intents_f[:root_index + 1]
-    print root_path + partial_name
-    print intents_f
     all_crashes = []
     before_crash_f = open(root_path + partial_name + ".sh", 'w')
     intents_file = open(intents_f, 'r')
     for line in intents_file:
         before_crash_f.write(line)
-        if crashed_intent == line:
+        if line.strip() in crashed_intent.strip()
             break
     before_crash_f.close()
     intents_file.close()
