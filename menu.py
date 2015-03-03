@@ -148,7 +148,7 @@ if __name__ == '__main__':
                 get_intent_type(intents_file.strip())
                 loop = False
         elif (choice=="6"):
-            print("\nYou have selected option 5. (Future) Generate apks for specific Intent calls")
+            print("\nYou have selected option 6. (Future) Generate apks for specific Intent calls")
             loop = False
         elif (str(choice) in ['q','Q']):
             print("\nThank you for using BIFUZ!")

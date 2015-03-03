@@ -102,7 +102,7 @@ def verify_availability(ip):
     else:
         return True
 
-
+'''
 def parse_session_logs(session):
     files = filter(os.path.isfile, os.listdir(session))
     files = [f for f in files if f.startswith('e_')]
@@ -114,7 +114,17 @@ def parse_session_logs(session):
                     intents.append(line)
                     break
     return intents
-
+'''
+def parse_session_logs(session):
+    files = [session+'/'+f for f in os.listdir(session) if f.startswith('e_')]
+    intents = []
+    for f in files:
+		#if logcat -c is not working, you will find the crashy intent at the end of the error file; that is why reversed is used
+        for line in reversed(open(f).readlines()):
+            if line.startswith('F/BIFUZ_'):
+				intents.append(line)
+				break
+    return intents
 
 def trim_session(session_one, session_two):
     sessions = [session_one, session_two]
