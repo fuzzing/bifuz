@@ -8,22 +8,27 @@
 #
 # Licensed under the MIT license, see COPYING.MIT for details
 
-import os, sys
+import os
+import sys
 import re
 import pprint
-import random, string
+import random
+import string
 import multiprocessing
 from common import *
 
 
 #list with domains used to generate random URIs
-domains=[".com",".org",".net",".int",".gov",".mil"]
+domains = [".com", ".org", ".net", ".int", ".gov", ".mil"]
+
+
 def generate_random_uri():
-    return random.choice(["http","https"])+"://"+str(string_generator(random.randint(10,100)))+random.choice(domains)
+    return random.choice(["http", "https"]) + "://" + \
+       str(string_generator(random.randint(10, 100))) + random.choice(domains)
 
 
 def string_generator(size=8, chars=string.ascii_uppercase + string.digits):
-      return ''.join(random.choice(chars) for _ in range(size))
+    return ''.join(random.choice(chars) for _ in range(size))
 
 
 def get_default_values():
@@ -48,7 +53,7 @@ def get_default_values():
     for i in range(len(flags)):
         index_fl = flags[i].index(':')
         if index_fl > 0:
-            flags[i] = flags[i][index_fl+1:]
+            flags[i] = flags[i][index_fl + 1:]
 
     with open(path_txt + "activity_actions.txt") as f:
         activity_actions = f.read().splitlines()
@@ -90,7 +95,8 @@ def parse_logcat(ip, log_filename):
             created_logfiles[new_filename] += 1
         else:
             created_logfiles[new_filename] = 1
-        os.rename(log_filename, new_filename + "_" + str(created_logfiles[new_filename]) + ".txt")
+        os.rename(log_filename, new_filename + "_" + \
+           str(created_logfiles[new_filename]) + ".txt")
     return True
 
 
@@ -99,7 +105,8 @@ def populate_activity():
     for k_pk in activity_map.keys():
         for actv in activity_map[k_pk].keys():
             if len(activity_map[k_pk].get(actv, {})) == 0:
-                activity_map[k_pk][actv] = dict([(x, categories) for x in activity_actions])
+                activity_map[k_pk][actv] = dict([(x, categories) \
+                   for x in activity_actions])
             else:
                 for intent in activity_map[k_pk][actv].keys():
                     if len(activity_map[k_pk][actv][intent]) == 0:
@@ -114,8 +121,9 @@ def get_info(data, line):
     data_actv = data_actv.split("\r\n")
     activity_end = 0
 
-    for i in range(len(data_actv)-1):
-        if data_actv[i] == '' and data_actv[i+1] == data_actv[i+1].lstrip():
+    for i in range(len(data_actv) - 1):
+        if data_actv[i] == '' and data_actv[i + 1] == \
+           data_actv[i + 1].lstrip():
             activity_end = i
             data_actv = data_actv[:i]
             break
@@ -134,14 +142,14 @@ def parse_dumpsys(data, line):
     act_ctg = {}
     part_line = ''
     for i in range(1, len(data)):
-        pk_re = re.search("\d+\w+\s("+line+"\S*)", data[i])
+        pk_re = re.search("\d+\w+\s(" + line + "\S*)", data[i])
         try:
             part_line = pk_re.group(1).strip()
 
             part_line = part_line.replace('/.', '.')
             index_sl = part_line.find('/')
             if index_sl != -1:
-                part_line = part_line[index_sl+1:]
+                part_line = part_line[index_sl + 1:]
 
             if part_line not in activity_map[line].keys():
                 act_ctg = {}
@@ -163,7 +171,7 @@ def parse_dumpsys(data, line):
         if part_line in activity_map[line].keys():
             activity_map[line][part_line] = act_ctg
         else:
-            activity_map[line].update({part_line : act_ctg})
+            activity_map[line].update({part_line: act_ctg})
     populate_activity()
     return True
 
@@ -176,11 +184,12 @@ def collect_info(ip, log_dir, selected_packages):
         sys.exit(1)
 
     global activity_map
-    activity_map ={}
+    activity_map = {}
 
     for line in lines:
         line = line.replace("package:", "")
-        cmnd = "shell dumpsys package %s > %s/package_%s.txt"%(line, log_dir, line)
+        cmnd = "shell dumpsys package %s > %s/package_%s.txt"\
+           % (line, log_dir, line)
         print cmnd
 
         run_resp = run_inadb(ip, cmnd)
@@ -195,9 +204,9 @@ def collect_info(ip, log_dir, selected_packages):
 
 def create_run_file(ip, log_dir):
     if ("." in ip):
-        run_cmnd = 'adb -s %s:5555'%(ip)
+        run_cmnd = 'adb -s %s:5555' % (ip)
     else:
-        run_cmnd='adb -s %s'%(ip)
+        run_cmnd = 'adb -s %s' % (ip)
 
     with open(log_dir + '/all_intent_' + ip + '.sh', 'w') as f:
         for k_pkg in activity_map.keys():
@@ -207,20 +216,25 @@ def create_run_file(ip, log_dir):
                         for flag in flags:
                             for extra_type in extra_types:
                                 if extra_type == "boolean":
-                                    ev = str(random.choice([True,False]))
+                                    ev = str(random.choice([True, False]))
                                 elif extra_type == "string":
-                                    ev = string_generator(random.randint(10,100))
+                                    ev = string_generator(random.randint(10, \
+                                       100))
                                 else:
-                                    ev = str(random.randint(10,100))
+                                    ev = str(random.randint(10, 100))
                                 for extra_key in extra_keys:
-                                    f.write(run_cmnd + ' shell am start -a '+ intent + ' -c ' + categ + ' -n ' + k_pkg + '/' + actv + ' -f ' + flag  \
-                                            + ' -d ' + generate_random_uri() + ' -e ' + extra_type + ' ' + extra_key + ' ' + ev + '\n')
+                                    f.write(run_cmnd + ' shell am start -a ' +\
+                                       intent + ' -c ' + categ + ' -n ' + \
+                                       k_pkg + '/' + actv + ' -f ' + flag  \
+                                       + ' -d ' + generate_random_uri() + \
+                                       ' -e ' + extra_type + ' ' + \
+                                       extra_key + ' ' + ev + '\n')
     return True
 
 
-def start_intent_fuzzer(ip, log_dir, generated_intents_file = None):
+def start_intent_fuzzer(ip, log_dir, generated_intents_file=None):
     if generated_intents_file is None:
-       generated_intents_file = log_dir + '/all_intent_' + ip + '.sh'
+        generated_intents_file = log_dir + '/all_intent_' + ip + '.sh'
 
     if not os.path.isfile(generated_intents_file):
         print "The intent calls were not generated!"
@@ -234,7 +248,7 @@ def start_intent_fuzzer(ip, log_dir, generated_intents_file = None):
             log_in_logcat(ip, 'BIFUZ_INTENT ' + line.strip())
             os.system(line.strip())
 
-            log_filename = "%s/testfile_%s_%d.txt"%(log_dir, ip, i)
+            log_filename = "%s/testfile_%s_%d.txt" % (log_dir, ip, i)
             run_result = run_inadb(ip, 'logcat -d > ' + log_filename)
             if run_result == "Unavailable device.":
                 print "Unavailable device: " + ip + ". Stop."
@@ -273,7 +287,8 @@ def generate_fuzzed_intent(devices_list, selected_packages):
     jobs = []
     for h in devices_list:
         log_dir = map_logdirs[h]
-        t = multiprocessing.Process(target=collect_info, args=(h,log_dir,selected_packages,))
+        t = multiprocessing.Process(target=collect_info, \
+           args=(h, log_dir, selected_packages,))
         t.start()
         jobs.append(t)
 
@@ -283,7 +298,8 @@ def generate_fuzzed_intent(devices_list, selected_packages):
     jobs = []
     for h in devices_list:
         log_dir = map_logdirs[h]
-        t = multiprocessing.Process(target=start_intent_fuzzer, args=(h,log_dir))
+        t = multiprocessing.Process(target=start_intent_fuzzer, \
+           args=(h, log_dir))
         t.start()
         jobs.append(t)
 

@@ -8,7 +8,8 @@
 #
 # Licensed under the MIT license, see COPYING.MIT for details
 
-import os, sys
+import os
+import sys
 import re
 import multiprocessing
 from common import *
@@ -42,8 +43,8 @@ def parse_logcat(ip, log_filename, generated_intents_file):
         return True
     if package_name and new_name:
         new_name = re.sub('\W+', '', new_name)
-        partial_name =  broadcast_to + "." + new_name
-        new_filename = root_path + "/e_" +  partial_name + ".txt"
+        partial_name = broadcast_to + "." + new_name
+        new_filename = root_path + "/e_" + partial_name + ".txt"
         os.rename(log_filename, new_filename)
         reproducibility(generated_intents_file, partial_name, crashed_intent)
     return True
@@ -56,13 +57,14 @@ def parse_receiver_resolver(data, package_name):
     data = data[index_resv:]
 
     data = data.split("\r\n")
-    while_lines = [i for i in range(len(data)-1) if data[i] == '' and data[i+1].lstrip() ==  data[i+1]]
+    while_lines = [i for i in range(len(data) - 1) if data[i] == '' and \
+                  data[i + 1].lstrip() == data[i + 1]]
     data = data[:while_lines[0]]
     package_list = []
     print data
 
     for i in range(len(data)):
-        m = re.search("\d+\w+\s("+package_name+"\S*)", data[i])
+        m = re.search("\d+\w+\s(" + package_name + "\S*)", data[i])
         try:
             part_line = m.group(1)
         except:
@@ -71,7 +73,7 @@ def parse_receiver_resolver(data, package_name):
         part_line = part_line.replace('/.', '.')
         index_sl = part_line.find('/')
         if index_sl != -1:
-            part_line = part_line[index_sl+1:]
+            part_line = part_line[index_sl + 1:]
         package_list.append(part_line)
     print package_list, "!! --- "
     package_list = sorted(set(package_list))
@@ -81,18 +83,19 @@ def parse_receiver_resolver(data, package_name):
 
 def create_run_file(ip, log_dir):
     if ("." in ip):
-        run_cmnd = 'adb -s %s:5555'%(ip)
+        run_cmnd = 'adb -s %s:5555' % (ip)
     else:
-        run_cmnd='adb -s %s'%(ip)
+        run_cmnd = 'adb -s %s' % (ip)
 
     with open(log_dir + '/all_broadcasts_' + ip + '.sh', 'w') as f:
         for k in packages_broadcast.keys():
             for val in packages_broadcast[k]:
-                f.write(run_cmnd + ' shell am broadcast -n '+ k + '/' +val + '\n')
+                f.write(run_cmnd + ' shell am broadcast -n ' + \
+                   k + '/' + val + '\n')
     return True
 
 
-def start_broadcast_fuzzer(ip, log_dir, generated_intents_file = None):
+def start_broadcast_fuzzer(ip, log_dir, generated_intents_file=None):
     if generated_intents_file is None:
         generated_intents_file = log_dir + '/all_broadcasts_' + ip + '.sh'
 
@@ -108,7 +111,7 @@ def start_broadcast_fuzzer(ip, log_dir, generated_intents_file = None):
             log_in_logcat(ip, 'BIFUZ_BROADCAST ' + line.strip())
             os.system(line.strip())
 
-            log_filename = "%s/testfile_%s_%d.txt"%(log_dir, ip, i)
+            log_filename = "%s/testfile_%s_%d.txt" % (log_dir, ip, i)
             run_result = run_inadb(ip, 'logcat -d > ' + log_filename)
             if run_result == "Unavailable device.":
                 print "Unavailable device: " + ip + ". Stop."
@@ -137,7 +140,8 @@ def get_broadcast(ip, log_dir, selected_packages):
 
     for line in lines:
         line = line.replace("package:", "")
-        cmnd = "shell dumpsys package %s > %s/package_%s.txt"%(line, log_dir, line)
+        cmnd = "shell dumpsys package %s > %s/package_%s.txt" \
+           % (line, log_dir, line)
         print cmnd
 
         run_resp = run_inadb(ip, cmnd)
@@ -169,7 +173,8 @@ def generate_broadcast_intent(devices_list, selected_packages):
     jobs = []
     for h in devices_list:
         log_dir = map_logdirs[h]
-        t = multiprocessing.Process(target=get_broadcast, args=(h, log_dir, selected_packages,))
+        t = multiprocessing.Process(target=get_broadcast, \
+           args=(h, log_dir, selected_packages,))
         t.start()
         jobs.append(t)
 
@@ -179,7 +184,8 @@ def generate_broadcast_intent(devices_list, selected_packages):
     jobs = []
     for h in devices_list:
         log_dir = map_logdirs[h]
-        t = multiprocessing.Process(target=start_broadcast_fuzzer, args=(h, log_dir,))
+        t = multiprocessing.Process(target=start_broadcast_fuzzer, \
+           args=(h, log_dir,))
         t.start()
         jobs.append(t)
 
