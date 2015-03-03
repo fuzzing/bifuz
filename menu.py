@@ -29,10 +29,13 @@ def get_intent_type(generated_intents_file):
     root_path = get_root_path(generated_intents_file)
     with open(generated_intents_file, 'r') as f:
         intent = f.readline()
+        #regex to be reviewed
         try:
             ip_r = re.search("adb -s ([^ ]+) .*", intent)
         except:
             ip = ip_r.group(1)
+        #quick fix until regex is reviewed for setting the IP
+        ip = str(intent).split(" ")[2]
         if intent.startswith('adb'):
             if "-a" in intent:
                 start_intent_fuzzer(ip, root_path, generated_intents_file)
@@ -58,7 +61,7 @@ def print_menu():
     print(k / 2 * " " + "2. Generate Broadcast Intent calls for the DUT(s)")
     print(k / 2 * " " + "3. Generate Fuzzed Intent calls")
     print(k / 2 * " " + "4. Generate a delta report between 2 \
-       fuzzing sessions")
+fuzzing sessions")
     print(k / 2 * " " + "5. Run existing generated intents from file")
     print(k / 2 * " " + "6. (Future) Generate apks for specific Intent calls")
     print(k / 2 * " " + "Q. Quit")
@@ -84,7 +87,7 @@ if __name__ == '__main__':
                 print str(i + 1) + ". " + devices_list[i]
 
             duts = str(raw_input("Select the DUT number(s) separated by \
-               comma or type 'all': "))
+comma or type 'all': "))
             for d in duts.split(','):
                 if d.isdigit():
                     duts_list = re.split(r'[,. ]+', duts)
@@ -101,7 +104,7 @@ if __name__ == '__main__':
                     devices_list = [devices_list[0]]
 
             print("\nGenerate broadcast intent calls for the \
-               following DUT(s): " + ', '.join(devices_list) \
+following DUT(s): " + ', '.join(devices_list) \
                if devices_list else 'Stop. Unavailable DUT')
 
             if not devices_list:
@@ -109,7 +112,7 @@ if __name__ == '__main__':
                 continue
 
             packages = str(raw_input("Insert the packages wanted \
-               or type 'all' for all packages:    "))
+or type 'all' for all packages:    "))
             if not packages:
                 print_menu()
             else:
@@ -122,7 +125,7 @@ if __name__ == '__main__':
                     devices_list = [devices_list[0]]
 
             print("\nGenerate fuzzed intent calls \
-               for the following DUT(s): " + \
+for the following DUT(s): " + \
                ''.join(devices_list[0]) if devices_list \
                else 'Stop. Unavailable DUT')
             if not devices_list:
@@ -130,7 +133,7 @@ if __name__ == '__main__':
                 continue
 
             packages = str(raw_input("Insert the wanted packages \
-               or type 'all' for all packages:    "))
+or type 'all' for all packages:    "))
             if not packages:
                 print_menu()
             else:
@@ -138,11 +141,11 @@ if __name__ == '__main__':
                 loop = False
         elif (choice == "4"):
             print("\nYou have selected option 4. Generate a delta report\
-               between 2 fuzzing sessions")
+between 2 fuzzing sessions")
             session_one = str(raw_input("Insert the absolute path \
-               for session one:    "))
+for session one:    "))
             session_two = str(raw_input("Insert the absolute path \
-               for session two:    "))
+for session two:    "))
             # testing reasons - to be deleted
             #session_one = '/home/andreeab/negative/bifuz/LOGS_6173B162_0115_17-13_broadcast'
             #session_two = '/home/andreeab/negative/bifuz/LOGS_6173B162_0115_17-34_broadcast'
@@ -152,9 +155,9 @@ if __name__ == '__main__':
             loop = False
         elif (choice == "5"):
             print("\nYou have selected option 5. Run existing generated \
-               intents from file.")
+intents from file.")
             intents_file = str(raw_input("Insert the absolute path of the \
-               file containing the intents:  "))
+file containing the intents:  "))
             #for testing reasons, to be deleted
             #intents_file = "/home/andreeab/negative/bifuz/LOGS_6173B162_0126_19-37_broadcast/all_broadcasts_6173B162.sh"
             if not intents_file:
@@ -164,12 +167,12 @@ if __name__ == '__main__':
                 loop = False
         elif (choice == "6"):
             print("\nYou have selected option 6. (Future) Generate apks \
-               for specific Intent calls")
+for specific Intent calls")
             loop = False
         elif (str(choice) in ['q', 'Q']):
             print("\nThank you for using BIFUZ!")
             loop = False
         elif (choice != ""):
             print("\nYour option is invalid. Please type any number \
-               between 1 and 5, or Q for Quit")
+between 1 and 5, or Q for Quit")
             choice = str(raw_input("Insert your choice:    "))
