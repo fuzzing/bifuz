@@ -16,6 +16,10 @@ from common import *
 
 
 def parse_logcat(ip, log_filename, generated_intents_file):
+    '''
+    Parse logcat to collect errors after running an intent.
+    '''
+
     root_index = log_filename.rfind('/')
     root_path = log_filename[:root_index]
     with open(log_filename, 'r') as logcat:
@@ -51,6 +55,11 @@ def parse_logcat(ip, log_filename, generated_intents_file):
 
 
 def parse_receiver_resolver(data, package_name):
+    '''
+    Get the information that we need from dumpsys.
+    Store it in a dictionary.
+    '''
+
     index_resv = data.find("Receiver Resolver Table")
     if index_resv == -1:
         return True
@@ -82,6 +91,10 @@ def parse_receiver_resolver(data, package_name):
 
 
 def create_run_file(ip, log_dir):
+    '''
+    Create intents by using the parameters collected from dumpsys.
+    '''
+
     if ("." in ip):
         run_cmnd = 'adb -s %s:5555' % (ip)
     else:
@@ -96,6 +109,11 @@ def create_run_file(ip, log_dir):
 
 
 def start_broadcast_fuzzer(ip, log_dir, generated_intents_file=None):
+    '''
+    Run all the intents previously generated.
+    Check logcat for crashes.
+    '''
+
     if generated_intents_file is None:
         generated_intents_file = log_dir + '/all_broadcasts_' + ip + '.sh'
 
@@ -129,6 +147,9 @@ def start_broadcast_fuzzer(ip, log_dir, generated_intents_file=None):
 
 
 def get_broadcast(ip, log_dir, selected_packages):
+    '''
+    Save dumpsys file for all the selected packages.
+    '''
 
     lines = get_package_list(ip, log_dir, selected_packages)
     if not lines:
@@ -157,6 +178,9 @@ def get_broadcast(ip, log_dir, selected_packages):
 
 
 def generate_broadcast_intent(devices_list, selected_packages):
+    '''
+    Create and run intents for every device.
+    '''
 
     #devices_list = get_devices_list()
     if not devices_list:

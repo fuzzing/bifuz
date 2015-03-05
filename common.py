@@ -36,6 +36,11 @@ def get_devices_list():
 
 
 def set_logdir(ip, fuzz_type):
+    '''
+    Create the log directory: serial no of the device, timestamp , intents type.
+    Returns the generated name.
+    '''
+
     current_dir = os.getcwd()
     new_folder = raw_input('\nDevice ' + ip + \
        ': Insert the name of the logs folder: ')
@@ -54,6 +59,10 @@ def set_logdir(ip, fuzz_type):
 
 
 def get_package_list(ip, log_dir, selected_packages):
+    '''
+    Get the list of the packages selected by the user.
+    '''
+
     lines = []
     if selected_packages == 'all':
         run_inadb(ip, "shell pm list packages > " + log_dir + \
@@ -91,6 +100,10 @@ def save_logcat(ip):
 
 
 def run_inadb(ip, command):
+    '''
+    Verify the type of the device, send the command and get output.
+    '''
+
     if not verify_availability(ip):
         return "Unavailable device."
 
@@ -102,6 +115,10 @@ def run_inadb(ip, command):
 
 
 def verify_availability(ip):
+    '''
+    Verify if a device is still available.
+    '''
+
     if ("." in ip):
         output = getoutput('adb -s %s:5555 get-state' % (ip))
     else:
@@ -127,6 +144,11 @@ def parse_session_logs(session):
 
 
 def parse_session_logs(session):
+    '''
+    For every error file collect the line that generated the error.
+    Returns a list of crashing intents.
+    '''
+
     files = [session + '/' + f for f in os.listdir(session) \
        if f.startswith('e_')]
     intents = []
@@ -141,6 +163,11 @@ def parse_session_logs(session):
 
 
 def trim_session(session_one, session_two):
+    '''
+    Trim the session log directory.
+    Used when generating the delta report between 2 running sessions.
+    '''
+
     sessions = [session_one, session_two]
     for s in range(len(sessions)):
         if sessions[s][-1] == '/':
@@ -150,6 +177,10 @@ def trim_session(session_one, session_two):
 
 
 def delta_reports(session_one, session_two):
+    '''
+    Analyse both sessions and save in a file the unique errors.
+    '''
+
     if not os.path.isdir(session_one) or not os.path.isdir(session_two):
         print "Verify if both fuzzing session exist."
         return False
@@ -180,6 +211,10 @@ def delta_reports(session_one, session_two):
 
 
 def reproducibility(intents_f, partial_name, crashed_intent):
+    '''
+    Save all the intents up to the crashing intent in a seed file.
+    '''
+
     root_index = intents_f.rfind('/all_')
     root_path = intents_f[:root_index + 1]
     all_crashes = []
@@ -192,3 +227,4 @@ def reproducibility(intents_f, partial_name, crashed_intent):
     before_crash_f.close()
     intents_file.close()
     return True
+
