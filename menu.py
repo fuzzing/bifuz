@@ -15,6 +15,11 @@ from broadcast_bifuz import *
 
 
 def get_root_path(intents_file):
+    '''
+    Get the root path of the intent file.
+    Used for running intents from the seed files.
+    '''
+
     if intents_file[-1] == '/':
         intents_file = intents_file[:-1]
     intents_file = intents_file[:intents_file.rfind('/')]
@@ -22,6 +27,11 @@ def get_root_path(intents_file):
 
 
 def get_intent_type(generated_intents_file):
+    '''
+    Verify if the seed file contains fuzzed intents or broadcast intents.
+    Used for running intents from the seed fiels.
+    '''
+
     if not os.path.isfile(generated_intents_file):
         print "This file does not exist: %s" % (generated_intents_file)
         return False
@@ -63,7 +73,8 @@ def print_menu():
     print(k / 2 * " " + "4. Generate a delta report between 2 \
 fuzzing sessions")
     print(k / 2 * " " + "5. Run existing generated intents from file")
-    print(k / 2 * " " + "6. (Future) Generate apks for specific Intent calls")
+    print(k / 2 * " " + "6. SQL injections for specific apk.")
+    print(k / 2 * " " + "7. (Future) Generate apks for specific Intent calls")
     print(k / 2 * " " + "Q. Quit")
     print("\n\n")
 
@@ -166,6 +177,22 @@ file containing the intents:  "))
                 get_intent_type(intents_file.strip())
                 loop = False
         elif (choice == "6"):
+            print("\nYou have selected option 6. SQL injections for specific apk.")
+            if len(devices_list) == 0:
+                devices_list = get_devices_list()
+                if devices_list is not False:
+                    devices_list = [devices_list[0]]
+
+            print("\nGenerate broadcast intent calls for the following DUT(s): " + ', '.join(devices_list) if devices_list else 'Stop. Unavailable DUT')
+
+            if not devices_list:
+                loop = False
+                continue
+            #package_name = str(raw_input("Insert the name of the package under test:  "))
+            package_name = "CalendarGoogle"
+            get_apks(devices_list, package_name)
+            loop = False
+        elif (choice == "7"):
             print("\nYou have selected option 6. (Future) Generate apks \
 for specific Intent calls")
             loop = False

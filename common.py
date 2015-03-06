@@ -228,3 +228,45 @@ def reproducibility(intents_f, partial_name, crashed_intent):
     intents_file.close()
     return True
 
+
+def get_apks_list(ip, apk_names):
+    '''
+    Get all the apks from the DUT or only the ones selected by the user
+    '''
+
+    output = run_inadb(ip, 'shell ls /system/app')
+    #output = run_inadb(ip, 'shell ls /system/app')
+    apps_list = output.split("\r\n")
+    for apk_name in apk_names:
+        match_apps = [app for app in apps_list if apk_name.lower in app.lower]
+
+
+def get_apks(ip, package_name):
+    '''
+    Get the apk of the application from the device.
+    Decode the apk using apktool.
+    Get the uris found in the application.
+    '''
+
+    get_apks_list(ip[0])
+    command_resp = run_inadb(ip[0], "pull " + "/system/app/CalendarGoogle/" + package_name + ".apk .")
+    if command_resp.startswith("Unavailable device"):
+        print command_resp
+        return False
+    outp_c = getoutput("apktool decode " + package_name + ".apk")
+    if not outp_c.startswith('I:'):
+        print outp_c
+        return False
+
+    provider_uris = []
+    provider_content = getoutput("grep -r 'content://' " + package_name)
+    provider_content = provider_content.split('\n')
+    for line in provider_content:
+        pattern = re.search("(content\:\/\/.*)\"", line)
+        try:
+            uri = pattern.group(1)
+            provider_uris.append(uri)
+        except:
+            continue
+    print list(set(provider_uris))
+    return list(set(provider_uris))
