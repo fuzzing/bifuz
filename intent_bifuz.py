@@ -32,6 +32,10 @@ def string_generator(size=8, chars=string.ascii_uppercase + string.digits):
 
 
 def get_default_values():
+    '''
+    Get the standard categories, extra_keys, extra_types,
+    flags and actions.
+    '''
 
     global categories
     global extra_keys
@@ -62,6 +66,11 @@ def get_default_values():
 
 
 def parse_logcat(ip, log_filename):
+    '''
+    Parse logcat to collect errors after running an intent.
+    In case of errors, call method to generate seed file.
+    '''
+
     root_index = log_filename.rfind('/')
     root_path = log_filename[:root_index]
     created_logfiles = {}
@@ -101,6 +110,10 @@ def parse_logcat(ip, log_filename):
 
 
 def populate_activity():
+    '''
+    If empty fields in dumpsys, populate with the standard values.
+    '''
+
     get_default_values()
     for k_pk in activity_map.keys():
         for actv in activity_map[k_pk].keys():
@@ -115,6 +128,11 @@ def populate_activity():
 
 
 def get_info(data, line):
+    '''
+    Select a part from dumpsys to collect the needed info.
+    Call the method that will parse it.
+    '''
+
     actv_index = data.find("Activity Resolver Table")
     data_actv = data[actv_index:]
 
@@ -138,6 +156,9 @@ def get_info(data, line):
 
 
 def parse_dumpsys(data, line):
+    '''
+    Parse dumpsys and get parameters like: activity, category if found.
+    '''
 
     act_ctg = {}
     part_line = ''
@@ -177,6 +198,9 @@ def parse_dumpsys(data, line):
 
 
 def collect_info(ip, log_dir, selected_packages):
+    '''
+    Save the dumpsys of every selected package.
+    '''
 
     lines = get_package_list(ip, log_dir, selected_packages)
     if not lines:
@@ -203,6 +227,10 @@ def collect_info(ip, log_dir, selected_packages):
 
 
 def create_run_file(ip, log_dir):
+    '''
+    Create intents using the collected data.
+    '''
+
     if ("." in ip):
         run_cmnd = 'adb -s %s:5555' % (ip)
     else:
@@ -233,6 +261,11 @@ def create_run_file(ip, log_dir):
 
 
 def start_intent_fuzzer(ip, log_dir, generated_intents_file=None):
+    '''
+    Start running intents.
+    Verify if errors are found.
+    '''
+
     if generated_intents_file is None:
         generated_intents_file = log_dir + '/all_intent_' + ip + '.sh'
 
@@ -266,6 +299,10 @@ def start_intent_fuzzer(ip, log_dir, generated_intents_file=None):
 
 
 def generate_fuzzed_intent(devices_list, selected_packages):
+    '''
+    Collect data and run on every device the generated intents.
+    '''
+
     global pp
     pp = pprint.PrettyPrinter(indent=4)
 
