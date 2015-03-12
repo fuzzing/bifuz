@@ -193,7 +193,7 @@ file containing the intents:  "))
             get_apks(devices_list, package_name)
             loop = False
         elif (choice == "7"):
-            print("\nYou have selected option 6. (Future) Generate apks \
+            print("\nYou have selected option 7. (Future) Generate apks \
 for specific Intent calls")
             loop = False
         elif (str(choice) in ['q', 'Q']):
@@ -201,5 +201,5 @@ for specific Intent calls")
             loop = False
         elif (choice != ""):
             print("\nYour option is invalid. Please type any number \
-between 1 and 5, or Q for Quit")
+between 1 and 7, or Q for Quit")
             choice = str(raw_input("Insert your choice:    "))
