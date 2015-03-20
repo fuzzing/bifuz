@@ -14,7 +14,8 @@ import re
 from commands import *
 from datetime import datetime
 from threading import Thread
-
+import random
+from intent_bifuz import *
 
 def get_devices_list():
     #returns the list of all DUTs connected
@@ -34,6 +35,9 @@ def get_devices_list():
 
     return devices_list
 
+
+def string_generator(size=8, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def set_logdir(ip, fuzz_type):
     '''
@@ -270,3 +274,40 @@ def get_apks(ip, package_name):
             continue
     print list(set(provider_uris))
     return list(set(provider_uris))
+
+def buffer_overflow(ip):
+	print "BUFFER OVERFLOW ATTEMPT against BLUETOOTH"
+	#function for generating intents of random sizes; it needs adb root access on the device (for the moment)
+	rand_int_f = random.randint(-2147483648,2147483647) #flag might be an integer between -2147483648 and 2147483647
+	rand_size_a = random.randint(1,131071)
+	rand_size_c = random.randint(1,131071)
+	rand_size_d = random.randint(1,131071)
+	rand_size_ek = random.randint(1,131071)
+	rand_size_ev = random.randint(1,131071)
+	os.system("touch buffer.sh")
+
+	#packages
+	#com.mwr.example.sieve/.MainLoginActivity
+	#com.google.android.calendar/com.android.calendar.AllInOneActivity 
+	#com.android.bluetooth/.opp.BluetoothOppLauncherActivity
+	fileName = "buffer"
+	#hardcoded package activity
+	pack_act = "com.android.bluetooth/.opp.BluetoothOppLauncherActivity"
+	
+	with open(fileName,"w") as f:
+		f.write("am start -n "+pack_act+" -f "+ str(rand_int_f)+ \
+		" -a "+string_generator(rand_size_a)+" -c "+string_generator(rand_size_c)+" -d "+string_generator(rand_size_d) + \
+		" -e "+string_generator(rand_size_ek)+" "+string_generator(rand_size_ev))
+		#f.write("am start -n com.google.android.calendar/com.android.calendar.AllInOneActivity -a "+string_generator(rand_size_a))
+		
+	os.system("chmod 777 "+fileName)
+	os.system("adb -s %s push "% (ip)+" "+fileName+" /data/data/")
+	os.system("adb -s %s shell sh /data/data/buffer"%(ip))
+
+	print str(rand_int_f) + " rand_int_f"
+	print str(rand_size_a) + " rand_size_a"
+	print str(rand_size_c) + " rand_size_c"
+	print str(rand_size_d) + " rand_size_d"
+	print str(rand_size_ek) + " rand_size_ek"
+	print str(rand_size_ev) + " rand_size_ev"
+

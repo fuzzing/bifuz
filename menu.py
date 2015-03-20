@@ -10,9 +10,9 @@
 
 import os
 import re
-from intent_bifuz import *
+from intent_bifuz import *	
 from broadcast_bifuz import *
-
+from common import *
 
 def get_root_path(intents_file):
     '''
@@ -75,6 +75,7 @@ fuzzing sessions")
     print(k / 2 * " " + "5. Run existing generated intents from file")
     print(k / 2 * " " + "6. SQL injections for specific apk.")
     print(k / 2 * " " + "7. (Future) Generate apks for specific Intent calls")
+    print(k / 2 * " " + "8. (WIP) Buffer overflow against Activity Manager - requires userdebug image")
     print(k / 2 * " " + "Q. Quit")
     print("\n\n")
 
@@ -196,6 +197,17 @@ file containing the intents:  "))
             print("\nYou have selected option 7. (Future) Generate apks \
 for specific Intent calls")
             loop = False
+        elif (choice == "8"):
+			#buffer overflow against Activity Manager run on the first device in the list
+			if len(devices_list) == 0:
+				devices_list = get_devices_list()
+				if devices_list is not False:
+					devices_list = [devices_list[0]]
+			repetitions = str(raw_input("How many large intents would like to send? (enter an int larger than 0) "))
+			ip = str(devices_list[0])
+			for i in range(int(repetitions)):
+				buffer_overflow(ip)
+			loop = False
         elif (str(choice) in ['q', 'Q']):
             print("\nThank you for using BIFUZ!")
             loop = False
