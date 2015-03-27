@@ -1,0 +1,6 @@
+#Do not add lines to this template; possible options for each item: fuzz, nofuzz; if nofuzz, then a list is expected
+action nofuzz ['A']
+category nofuzz ['C1','C2']
+data_uri nofuzz ['D1','D2','D3']
+e_key nofuzz ['ek']
+e_val nofuzz ['ev1','ev2','ev3','ev4']
