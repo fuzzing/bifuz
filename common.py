@@ -5,6 +5,7 @@
 # Copyright (C) 2015 Intel Corporation
 # Author: Andreea Brindusa Proca <andreea.brindusa.proca@intel.com>
 # Author: Razvan-Costin Ionescu <razvan.ionescu@intel.com>
+# Author: Bogdan Alexandru Ungureanu <bogdanx.a.ungureanu@intel.com>
 #
 # Licensed under the MIT license, see COPYING.MIT for details
 
@@ -315,6 +316,9 @@ def buffer_overflow(ip):
 	print str(rand_size_ev) + " rand_size_ev"
 
 def parse_string_for_lists(string_input,ip):
+    '''
+    Function for parsing the template's lines and looking for lists received as parameters
+    '''
     output=[]
     if "[" not in string_input:
 		#if there is no list in the template
