@@ -365,55 +365,44 @@ def parse_template(templateFile):
     data_uri_tem = lines[3]
     e_key_tem = lines[4]
     e_val_tem = lines[5]
-    
-    
-     
     if action_tem.strip().split()[1]=="fuzz":
-		rand_size_a = random.randint(1,10) #1, 131071
+		rand_size_a = random.randint(1,131071) #1, 131071
 		action_fuzz = string_generator(rand_size_a)
-		print action_fuzz
+#		print action_fuzz
     else:
         action_fuzz = action_tem.strip().split()[2]
-        print "Action is not fuzzed"+str(action_tem.split(" "))
+#       print "Action is not fuzzed"+str(action_tem.split(" "))
         
     if category_tem.strip().split()[1]=="fuzz":
-		rand_size_c = random.randint(1,10) #1, 131071
+		rand_size_c = random.randint(1,131071) #1, 131071
 		category_fuzz = string_generator(rand_size_c)
-		print category_fuzz
+#		print category_fuzz
     else:
         category_fuzz = category_tem.strip().split()[2]
-        print "Category is not fuzzed"+str(category_tem.split(" "))
+#       print "Category is not fuzzed"+str(category_tem.split(" "))
         
     if data_uri_tem.strip().split()[1]=="fuzz":
-		rand_size_d = random.randint(1,10) #1, 131071
+		rand_size_d = random.randint(1,131071) #1, 131071
 		data_uri_fuzz = string_generator(rand_size_d)
-		print data_uri_fuzz
+#		print data_uri_fuzz
     else:
         data_uri_fuzz = data_uri_tem.strip().split()[2]
-        print "Data URI is not fuzzed"+str(data_uri_tem.split(" "))
+#       print "Data URI is not fuzzed"+str(data_uri_tem.split(" "))
         
     if e_key_tem.strip().split()[1]=="fuzz":
-		rand_size_ek = random.randint(1,10) #1, 131071
+		rand_size_ek = random.randint(1,131071) #1, 131071
 		e_key_fuzz = string_generator(rand_size_ek)
-		print e_key_fuzz
+#		print e_key_fuzz
     else:
         e_key_fuzz = e_key_tem.strip().split()[2]
-        print "Extra Key is not fuzzed"+str(e_key_tem.split(" "))
+#       print "Extra Key is not fuzzed"+str(e_key_tem.split(" "))
         
     if e_val_tem.strip().split()[1]=="fuzz":
-		rand_size_ev = random.randint(1,10) #1, 131071
+		rand_size_ev = random.randint(1,131071) #1, 131071
 		e_val_fuzz = string_generator(rand_size_ev)
-		print e_val_fuzz
+#		print e_val_fuzz
     else:
         e_val_fuzz = e_val_tem.strip().split()[2]
-        print "Extra value is not fuzzed"+str(e_val_tem.split(" "))
+#       print "Extra value is not fuzzed"+str(e_val_tem.split(" "))
         
     return str("-a "+action_fuzz+" -c "+category_fuzz+" -d "+data_uri_fuzz+" -e "+e_key_fuzz+" "+e_val_fuzz)
-    
-    '''
-    print action_tem,
-    print category_tem,
-    print data_uri_tem,
-    print e_key_tem,
-    print e_val_tem,
-    '''

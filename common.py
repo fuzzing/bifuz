@@ -16,6 +16,9 @@ from datetime import datetime
 from threading import Thread
 import random
 from intent_bifuz import *
+import ast
+import itertools
+
 
 def get_devices_list():
     #returns the list of all DUTs connected
@@ -311,3 +314,32 @@ def buffer_overflow(ip):
 	print str(rand_size_ek) + " rand_size_ek"
 	print str(rand_size_ev) + " rand_size_ev"
 
+def parse_string_for_lists(string_input,ip):
+    output=[]
+    if "[" not in string_input:
+		#if there is no list in the template
+        output.append(string_input)
+    else:
+		#if there are lists specified within the template
+        list_pattern = '\[[^\]]*\]'
+        list_strings = re.findall(list_pattern, string_input)
+        i = 0
+        arg_lists_maping = {}
+        string_template = string_input
+        arg_lists = []
+        for list in list_strings:
+            key = '$' + str(i) + '$'
+            i += 1
+            string_template = string_template.replace(list, key)
+            arg_lists_maping[key] = ast.literal_eval(list)
+            arg_lists.append(ast.literal_eval(list))
+        for element in itertools.product(*arg_lists):
+            i = 0
+            gen_string = string_template
+            for arg in element:
+                key = '$' + str(i) + '$'
+                i += 1
+                gen_string = gen_string.replace(key, arg)
+            #print gen_string
+            output.append(gen_string)
+    return output
