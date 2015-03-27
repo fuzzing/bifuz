@@ -237,6 +237,8 @@ def reproducibility(intents_f, partial_name, crashed_intent):
     return True
 
 
+
+
 def get_apks_list(ip, apk_names):
     '''
     Get all the apks from the DUT or only the ones selected by the user
@@ -249,15 +251,16 @@ def get_apks_list(ip, apk_names):
         match_apps = [app for app in apps_list if apk_name.lower in app.lower]
 
 
+
 def get_apks(ip, package_name):
     '''
     Get the apk of the application from the device.
     Decode the apk using apktool.
     Get the uris found in the application.
     '''
-
-    get_apks_list(ip[0])
-    command_resp = run_inadb(ip[0], "pull " + "/system/app/CalendarGoogle/" + package_name + ".apk .")
+    # get_apks_list(ip[0])
+    command_resp = run_inadb(ip[0], "pull " + "/system/app/" + package_name + ".apk .")
+    print command_resp
     if command_resp.startswith("Unavailable device"):
         print command_resp
         return False
@@ -276,7 +279,7 @@ def get_apks(ip, package_name):
             provider_uris.append(uri)
         except:
             continue
-    print list(set(provider_uris))
+    #print list(set(provider_uris))
     return list(set(provider_uris))
 
 def buffer_overflow(ip):
