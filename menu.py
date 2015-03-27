@@ -75,7 +75,8 @@ fuzzing sessions")
     print(k / 2 * " " + "5. Run existing generated intents from file")
     print(k / 2 * " " + "6. SQL injections for specific apk.")
     print(k / 2 * " " + "7. (Future) Generate apks for specific Intent calls")
-    print(k / 2 * " " + "8. (WIP) Buffer overflow against Activity Manager - requires userdebug image")
+    print(k / 2 * " " + "8. Buffer overflow against Activity Manager - requires userdebug image")
+    print(k / 2 * " " + "9. (WIP) Smart fuzzing - using a template")
     print(k / 2 * " " + "Q. Quit")
     print("\n\n")
 
@@ -86,6 +87,7 @@ if __name__ == '__main__':
     loop = True
     devices_list = []
     while loop:
+		#option 1
         if (choice == "1"):
             print("\nYou have selected option 1. Select Devices Under Test")
 
@@ -109,6 +111,8 @@ comma or type 'all': "))
             if len(devices_list) > 0:
                 print ("Selected DUT(s): " + ', '.join(devices_list))
             choice = str(raw_input("Insert your choice: "))
+        
+        #option 2    
         elif (choice == "2"):
             if len(devices_list) == 0:
                 devices_list = get_devices_list()
@@ -130,12 +134,13 @@ or type 'all' for all packages:    "))
             else:
                 generate_broadcast_intent(devices_list, packages.strip())
                 loop = False
+                
+        #option 3
         elif (choice == "3"):
             if len(devices_list) == 0:
                 devices_list = get_devices_list()
                 if devices_list is not False:
                     devices_list = [devices_list[0]]
-
             print("\nGenerate fuzzed intent calls \
 for the following DUT(s): " + \
                ''.join(devices_list[0]) if devices_list \
@@ -143,7 +148,6 @@ for the following DUT(s): " + \
             if not devices_list:
                 loop = False
                 continue
-
             packages = str(raw_input("Insert the wanted packages \
 or type 'all' for all packages:    "))
             if not packages:
@@ -151,6 +155,8 @@ or type 'all' for all packages:    "))
             else:
                 generate_fuzzed_intent(devices_list, packages.strip())
                 loop = False
+                
+        #option 4
         elif (choice == "4"):
             print("\nYou have selected option 4. Generate a delta report\
 between 2 fuzzing sessions")
@@ -165,6 +171,8 @@ for session two:    "))
                 continue
             delta_reports(session_one.strip(), session_two.strip())
             loop = False
+            
+        #option 5
         elif (choice == "5"):
             print("\nYou have selected option 5. Run existing generated \
 intents from file.")
@@ -177,6 +185,8 @@ file containing the intents:  "))
             else:
                 get_intent_type(intents_file.strip())
                 loop = False
+                
+        #option 6
         elif (choice == "6"):
             print("\nYou have selected option 6. SQL injections for specific apk.")
             if len(devices_list) == 0:
@@ -193,10 +203,14 @@ file containing the intents:  "))
             package_name = "CalendarGoogle"
             get_apks(devices_list, package_name)
             loop = False
+            
+        #option 7
         elif (choice == "7"):
             print("\nYou have selected option 7. (Future) Generate apks \
 for specific Intent calls")
             loop = False
+        
+        #option 8
         elif (choice == "8"):
 			#buffer overflow against Activity Manager run on the first device in the list
 			if len(devices_list) == 0:
@@ -208,6 +222,38 @@ for specific Intent calls")
 			for i in range(int(repetitions)):
 				buffer_overflow(ip)
 			loop = False
+		
+		#option 9	
+        elif (choice == "9"):
+           print ("\nYou have selected option 9")
+           test_pack = str(raw_input("Insert testing package: "))
+           #template_path = str(raw_input("Insert full path to the template file: "))
+           #for testing reasons, the template_path has been hardcoded
+           template_path = str(os.getcwd())+"/templates/test_template.tem"
+           fuzzy_items = parse_template(template_path)
+           print test_pack
+           print "The template outputs: \n"
+           #output
+           print "am start -n "+test_pack+" "+str(fuzzy_items)
+           
+           #parsing fuzzy_items
+           print fuzzy_items.strip().split()
+           for fuzzy_element in fuzzy_items.strip().split():
+			   print type(fuzzy_element.strip())
+			   print fuzzy_element.strip()
+			   if "[" in fuzzy_element.strip():
+				   print "LIIIST"
+				   li = fuzzy_element.strip().split(",")
+				   print li
+           
+          # with open("intents_from_template","w") as f:
+          #    f.write("am start -n "+test_pack+" -f "+ str(rand_int_f)+ \
+		  #    " -a "+string_generator(rand_size_a)+" -c "+string_generator(rand_size_c)+" -d "+string_generator(rand_size_d) + \
+		  #    " -e "+string_generator(rand_size_ek)+" "+string_generator(rand_size_ev))
+		
+           loop = False
+           
+        #quit
         elif (str(choice) in ['q', 'Q']):
             print("\nThank you for using BIFUZ!")
             loop = False
