@@ -244,7 +244,7 @@ file containing the intents:  "))
                 uninstall_command='shell pm uninstall -k ' +'bifuz.com'
                 print run_inadb(devices_list[0], uninstall_command)
                 #install apk
-                install_command='-d install ' +'../Bifuz/bin/Bifuz.apk'
+                install_command='-d install ' +'Bifuz.apk'
                 print run_inadb(devices_list[0], install_command)
                 #start Bifuz
                 run_command='shell am start -n bifuz.com/.MainActivity'
