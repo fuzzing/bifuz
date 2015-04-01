@@ -1,5 +1,0 @@
---------- beginning of /dev/log/system
---------- beginning of /dev/log/main
-04-01 19:45:00.976 F/ActivityManager( 1116): Service ServiceRecord{42fad988 u0 com.twitter.android/com.twitter.internal.android.service.AsyncService} in process ProcessRecord{42aa4580 31515:com.twitter.android/u0a173} not same as in map: null
-04-01 19:47:39.706 F/ActivityManager( 1116): Service ServiceRecord{43366918 u0 com.facebook.katana/com.facebook.fbservice.service.DefaultBlueService} in process ProcessRecord{42ee20c8 31696:com.facebook.katana/u0a25} not same as in map: null
-04-01 19:48:12.596 F/ActivityManager( 1116): Service ServiceRecord{42f0ea70 u0 com.htc.album/com.htc.mediamanager.MMService} in process ProcessRecord{4287d220 29087:com.htc.album/u0a32} not same as in map: null
