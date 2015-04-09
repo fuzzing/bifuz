@@ -19,6 +19,7 @@ from common import *
 
 
 #list with domains used to generate random URIs
+global domains
 domains = [".com", ".org", ".net", ".int", ".gov", ".mil"]
 
 
@@ -359,50 +360,80 @@ adb -s <DEVICE ID> shell am start
 def parse_template(templateFile):
     with open(templateFile) as tf:
         lines = tf.readlines()
-    
+        
     action_tem = lines[1]
     category_tem = lines[2]
     data_uri_tem = lines[3]
     e_key_tem = lines[4]
     e_val_tem = lines[5]
+    flag_tem = lines[6]
+    
     if action_tem.strip().split()[1]=="fuzz":
 		rand_size_a = random.randint(1,131071) #1, 131071
 		action_fuzz = string_generator(rand_size_a)
-#		print action_fuzz
-    else:
-        action_fuzz = action_tem.strip().split()[2]
-#       print "Action is not fuzzed"+str(action_tem.split(" "))
-        
+    else: #nofuzz
+        if len(action_tem.strip().split())<3:   #nofuzz and empty
+            action_fuzz = fill_default_values("act")
+        else: #nofuzz but with list
+            action_fuzz = action_tem.strip().split()[2]
+    
     if category_tem.strip().split()[1]=="fuzz":
 		rand_size_c = random.randint(1,131071) #1, 131071
 		category_fuzz = string_generator(rand_size_c)
-#		print category_fuzz
     else:
-        category_fuzz = category_tem.strip().split()[2]
-#       print "Category is not fuzzed"+str(category_tem.split(" "))
-        
+        if len(category_tem.strip().split())<3:
+            category_fuzz = fill_default_values("cat")
+        else:
+            category_fuzz = category_tem.strip().split()[2]
+    
     if data_uri_tem.strip().split()[1]=="fuzz":
 		rand_size_d = random.randint(1,131071) #1, 131071
 		data_uri_fuzz = string_generator(rand_size_d)
-#		print data_uri_fuzz
     else:
-        data_uri_fuzz = data_uri_tem.strip().split()[2]
-#       print "Data URI is not fuzzed"+str(data_uri_tem.split(" "))
+        if len(data_uri_tem.strip().split())<3:
+            data_uri_fuzz = ["DEFAULT"]
+        else:
+            data_uri_fuzz = data_uri_tem.strip().split()[2]
         
     if e_key_tem.strip().split()[1]=="fuzz":
 		rand_size_ek = random.randint(1,131071) #1, 131071
 		e_key_fuzz = string_generator(rand_size_ek)
-#		print e_key_fuzz
     else:
-        e_key_fuzz = e_key_tem.strip().split()[2]
-#       print "Extra Key is not fuzzed"+str(e_key_tem.split(" "))
-        
+        if len(e_key_tem.strip().split())<3:
+            e_key_fuzz = fill_default_values("ek")
+        else:
+            e_key_fuzz = e_key_tem.strip().split()[2]
+            
     if e_val_tem.strip().split()[1]=="fuzz":
 		rand_size_ev = random.randint(1,131071) #1, 131071
 		e_val_fuzz = string_generator(rand_size_ev)
-#		print e_val_fuzz
     else:
-        e_val_fuzz = e_val_tem.strip().split()[2]
-#       print "Extra value is not fuzzed"+str(e_val_tem.split(" "))
+        if len(e_val_tem.strip().split())<3:
+            e_val_fuzz = ["0"] #there is no default value
+        else:
+            e_val_fuzz = e_val_tem.strip().split()[2]
+    
+    if flag_tem.strip().split()[1]=="fuzz":
+		flag_fuzz = str(random.randint(-2147483648,2147483647)) #flag might be an integer between -2147483648 and 2147483647
+    else:
+        if len(flag_tem.strip().split())<3:
+            flag_fuzz = fill_default_values("flag")
+        else:
+            flag_fuzz = action_tem.strip().split()[2]
+    print "REWRITING the template with the default values - if the case"
+    #rewrite the template with the new values
+    #with open(templateFile+"_up",'w') as t:
+    with open(templateFile,'w') as t:
+        t.write("#Do not add lines to this template; possible options for each item: fuzz, nofuzz; if nofuzz, then a list is expected\n")
+        t.write("action "+str(action_fuzz)+"\n")
+        t.write("category "+str(category_fuzz)+"\n")
+        t.write("data_uri "+str(data_uri_fuzz)+"\n")
+        t.write("e_key "+str(e_key_fuzz)+"\n")
+        t.write("e_val "+str(e_val_fuzz)+"\n")
+        t.write("flag "+str(flag_fuzz)+"\n")
         
-    return str("-a "+action_fuzz+" -c "+category_fuzz+" -d "+data_uri_fuzz+" -e "+e_key_fuzz+" "+e_val_fuzz)
+        
+    print "Template has been rewritten"
+        
+    #print str("-f "+str(flag_fuzz)+" -a "+str(action_fuzz)+" -c "+str(category_fuzz)+" -d "+str(data_uri_fuzz)+" -e "+str(e_key_fuzz)+" "+str(e_val_fuzz))
+    return str("-f "+str(flag_fuzz)+" -a "+str(action_fuzz)+" -c "+str(category_fuzz)+" -d "+str(data_uri_fuzz)+" -e "+str(e_key_fuzz)+" "+str(e_val_fuzz))

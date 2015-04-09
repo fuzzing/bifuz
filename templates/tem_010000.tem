@@ -1,0 +1,7 @@
+#Do not add lines to this template; possible options for each item: fuzz, nofuzz; if nofuzz, then a list is expected
+action nofuzz 
+category fuzz 
+data_uri nofuzz 
+e_key nofuzz 
+e_val nofuzz
+flag nofuzz
