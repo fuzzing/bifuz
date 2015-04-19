@@ -236,18 +236,18 @@ file containing the intents:  "))
                     print "*ERROR* unavailable devices"
                     loop = False
                     continue
-		#put seed folder on device
-                copy_file_command='push ' + seed_folder +' /data/local/test/'
+				#put seed folder on device             				
+                copy_file_command='push ' + seed_folder +' /data/local/tmp/test/'
                 print copy_file_command
                 print run_inadb(devices_list[0], copy_file_command)
                 #uninstall old apk if exists
-                uninstall_command='shell pm uninstall -k ' +'bifuz.com'
+                uninstall_command='shell pm uninstall -k ' +'org.test.bifuz'
                 print run_inadb(devices_list[0], uninstall_command)
                 #install apk
-                install_command='-d install ' +'Bifuz.apk'
+                install_command='-d install ' +'Bifuz-1.0.0-debug.apk'
                 print run_inadb(devices_list[0], install_command)
                 #start Bifuz
-                run_command='shell am start -n bifuz.com/.MainActivity'
+                run_command='shell am start -n org.test.bifuz/org.renpy.android.PythonActivity'
                 print run_inadb(devices_list[0], run_command)
                 logcat_cmd = "adb -s %s logcat -v time *:F > logcat_%s"%(devices_list[0], devices_list[0])
                 os.system(logcat_cmd)

@@ -1,0 +1,42 @@
+--------- beginning of main
+D/dalvikvm(  359): GC_FOR_ALLOC freed 1355K, 27% free 5411K/7332K, paused 75ms, total 78ms
+I/WearableConn(  484): Waiting 4.0 seconds to retry connection
+F/BIFUZ_BROADCAST( 1956): adb -s emulator-5554 shell am broadcast -n com.google.android.apps.wearable.settings/com.google.android.clockwork.settings.BootReceiver 
+D/AndroidRuntime( 1958): 
+D/AndroidRuntime( 1958): >>>>>> AndroidRuntime START com.android.internal.os.RuntimeInit <<<<<<
+D/AndroidRuntime( 1958): CheckJNI is ON
+I/Process ( 1009): Sending signal. PID: 1009 SIG: 9
+--------- beginning of system
+I/ActivityManager(  359): Process android.process.media (pid 1009) has died.
+D/dalvikvm( 1958): Trying to load lib libjavacore.so 0x0
+D/dalvikvm( 1958): Added shared lib libjavacore.so 0x0
+D/dalvikvm( 1958): Trying to load lib libnativehelper.so 0x0
+D/dalvikvm( 1958): Added shared lib libnativehelper.so 0x0
+D/dalvikvm( 1958): No JNI_OnLoad found in libnativehelper.so 0x0, skipping init
+D/dalvikvm( 1958): Note: class Landroid/app/ActivityManagerNative; has 179 unimplemented (abstract) methods
+E/memtrack( 1958): Couldn't load memtrack module (No such file or directory)
+E/android.os.Debug( 1958): failed to load memtrack module: -2
+D/AndroidRuntime( 1958): Calling main entry com.android.commands.am.Am
+D/AndroidRuntime(  539): Shutting down VM
+D/AndroidRuntime( 1958): Shutting down VM
+D/jdwp    ( 1958): Got wake-up signal, bailing out of select
+D/dalvikvm( 1958): Debugger has detached; object registry had 1 entries
+W/dalvikvm(  539): threadid=1: thread exiting with uncaught exception (group=0xb3a40d70)
+E/AndroidRuntime(  539): FATAL EXCEPTION: main
+E/AndroidRuntime(  539): Process: com.google.android.apps.wearable.settings, PID: 539
+E/AndroidRuntime(  539): java.lang.RuntimeException: Unable to start receiver com.google.android.clockwork.settings.BootReceiver: java.lang.NullPointerException
+E/AndroidRuntime(  539): 	at android.app.ActivityThread.handleReceiver(ActivityThread.java:2439)
+E/AndroidRuntime(  539): 	at android.app.ActivityThread.access$1700(ActivityThread.java:138)
+E/AndroidRuntime(  539): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1285)
+E/AndroidRuntime(  539): 	at android.os.Handler.dispatchMessage(Handler.java:102)
+E/AndroidRuntime(  539): 	at android.os.Looper.loop(Looper.java:136)
+E/AndroidRuntime(  539): 	at android.app.ActivityThread.main(ActivityThread.java:5026)
+E/AndroidRuntime(  539): 	at java.lang.reflect.Method.invokeNative(Native Method)
+E/AndroidRuntime(  539): 	at java.lang.reflect.Method.invoke(Method.java:515)
+E/AndroidRuntime(  539): 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:777)
+E/AndroidRuntime(  539): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:602)
+E/AndroidRuntime(  539): 	at dalvik.system.NativeStart.main(Native Method)
+E/AndroidRuntime(  539): Caused by: java.lang.NullPointerException
+E/AndroidRuntime(  539): 	at com.google.android.clockwork.settings.BootReceiver.onReceive(BootReceiver.java:25)
+E/AndroidRuntime(  539): 	at android.app.ActivityThread.handleReceiver(ActivityThread.java:2432)
+E/AndroidRuntime(  539): 	... 10 more

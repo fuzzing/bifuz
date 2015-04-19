@@ -1,0 +1,41 @@
+--------- beginning of main
+I/WearableConn(  484): Connecting via TCP to /10.0.2.2:5601
+W/WearableConn(  484): Error writing to device, error: failed to connect to /10.0.2.2 (port 5601): connect failed: ECONNREFUSED (Connection refused)
+I/WearableConn(  484): Socket closed
+I/WearableConn(  484): Waiting 4.0 seconds to retry connection
+F/BIFUZ_BROADCAST( 2253): adb -s emulator-5554 shell am broadcast -n com.google.android.gms/com.google.android.gms.auth.devicesignals.LockScreenListener 
+D/AndroidRuntime( 2255): 
+D/AndroidRuntime( 2255): >>>>>> AndroidRuntime START com.android.internal.os.RuntimeInit <<<<<<
+D/AndroidRuntime( 2255): CheckJNI is ON
+D/dalvikvm( 2255): Trying to load lib libjavacore.so 0x0
+D/dalvikvm( 2255): Added shared lib libjavacore.so 0x0
+D/dalvikvm( 2255): Trying to load lib libnativehelper.so 0x0
+D/dalvikvm( 2255): Added shared lib libnativehelper.so 0x0
+D/dalvikvm( 2255): No JNI_OnLoad found in libnativehelper.so 0x0, skipping init
+D/dalvikvm( 2255): Note: class Landroid/app/ActivityManagerNative; has 179 unimplemented (abstract) methods
+E/memtrack( 2255): Couldn't load memtrack module (No such file or directory)
+E/android.os.Debug( 2255): failed to load memtrack module: -2
+D/AndroidRuntime( 2255): Calling main entry com.android.commands.am.Am
+D/AndroidRuntime( 2255): Shutting down VM
+D/AndroidRuntime( 2158): Shutting down VM
+W/dalvikvm( 2158): threadid=1: thread exiting with uncaught exception (group=0xb3a40d70)
+D/dalvikvm( 2255): Debugger has detached; object registry had 1 entries
+--------- beginning of system
+E/AndroidRuntime( 2158): FATAL EXCEPTION: main
+E/AndroidRuntime( 2158): Process: com.google.process.gapps, PID: 2158
+E/AndroidRuntime( 2158): java.lang.RuntimeException: Unable to start receiver com.google.android.gms.auth.devicesignals.LockScreenListener: java.lang.NullPointerException
+E/AndroidRuntime( 2158): 	at android.app.ActivityThread.handleReceiver(ActivityThread.java:2439)
+E/AndroidRuntime( 2158): 	at android.app.ActivityThread.access$1700(ActivityThread.java:138)
+E/AndroidRuntime( 2158): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1285)
+E/AndroidRuntime( 2158): 	at android.os.Handler.dispatchMessage(Handler.java:102)
+E/AndroidRuntime( 2158): 	at android.os.Looper.loop(Looper.java:136)
+E/AndroidRuntime( 2158): 	at android.app.ActivityThread.main(ActivityThread.java:5026)
+E/AndroidRuntime( 2158): 	at java.lang.reflect.Method.invokeNative(Native Method)
+E/AndroidRuntime( 2158): 	at java.lang.reflect.Method.invoke(Method.java:515)
+E/AndroidRuntime( 2158): 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:777)
+E/AndroidRuntime( 2158): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:602)
+E/AndroidRuntime( 2158): 	at dalvik.system.NativeStart.main(Native Method)
+E/AndroidRuntime( 2158): Caused by: java.lang.NullPointerException
+E/AndroidRuntime( 2158): 	at com.google.android.gms.auth.devicesignals.LockScreenListener.onReceive(SourceFile:58)
+E/AndroidRuntime( 2158): 	at android.app.ActivityThread.handleReceiver(ActivityThread.java:2432)
+E/AndroidRuntime( 2158): 	... 10 more
