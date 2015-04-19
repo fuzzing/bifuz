@@ -14,6 +14,9 @@ import re
 from intent_bifuz import *	
 from broadcast_bifuz import *
 from common import *
+from time import time
+import random
+
 
 def get_root_path(intents_file):
     '''
@@ -269,32 +272,62 @@ file containing the intents:  "))
 		#option 9	
         elif (choice == "9"):
            print ("\nYou have selected option 9")
-           #buffer overflow against Activity Manager run on the first device in the list
+           #smart fuzzing - based on templates
            if len(devices_list) == 0:
                devices_list = get_devices_list()
                if devices_list is not False:
                    devices_list = [devices_list[0]]
            #WIP - IP is set for the first connected device
            ip = str(devices_list[0])
-           #pack_act = "com.android.bluetooth/.opp.BluetoothOppLauncherActivity"
-           #test_pack = str(raw_input("Insert testing package: "))
-           test_pack = "com.android.bluetooth/.opp.BluetoothOppLauncherActivity"
-           #template_path = str(raw_input("Insert full path to the template file: "))
-           #for testing reasons, the template_path has been hardcoded
-           template_path = str(os.getcwd())+"/templates/test_template.tem"
-           fuzzy_items = parse_template(template_path)
-           fuzzy_intents = parse_string_for_lists("am start -n "+test_pack+" "+str(fuzzy_items),ip)
-           for i in range(len(fuzzy_intents)):
-               filename = "intent_from_template"+str(i)
-               with open(filename,"w") as f:
-                   f.write(fuzzy_intents[i])
-               os.system("chmod 777 "+filename)
-               #os.system("adb -s %s push "% (ip)+" "+filename+" /data/data/")
-               os.system("adb -s %s push "% (ip)+" "+filename+" /sdcard/")
-               #os.system("adb -s %s shell sh /data/data/%s"%(ip,filename))
-               os.system("adb -s %s shell sh /sdcard/%s"%(ip,filename))
-               os.system("adb -s %s shell log -p f -t %s" % (ip, str(fuzzy_intents[i])))
+           template_edited = str(raw_input("Do you have created a template file? [y/n]: "))
+           if str(template_edited) in ['y','Y']:
+              pass
+           else:
+              break
+           
+           
+           #to be implemented - test for multiple packages
+           '''
+           test_pack = str(raw_input("Insert testing package: "))
+           list_test_pack = []
+           look_for_test_pack = getoutput("adb -s %s shell pm list packages | grep %s"%(ip,test_pack))
+           for tp in look_for_test_pack.strip().split("package:"):
+			   if tp!="":
+				   list_test_pack.append(tp.strip())
+           '''
+           #test_pack - activity to be tested - for testing purposes we use all gms Activities
+           
+           with open(os.getcwd()+"/txts/gms_activities.txt","r") as f:
+               gms_acts = f.readlines()
+                      
+           template_path = str(raw_input("Insert full path to the template file(s): "))
+           tem = getoutput("ls %s/*.tem"%template_path)
+           list_tem_files = tem.split()
+           i=0
+           for tem_file in list_tem_files:
+               fuzzy_items = parse_template(tem_file)
+               for test_p in gms_acts:
+                   test_pack = test_p.strip()
+                   fuzzy_intents = parse_string_for_lists("am start -n "+test_pack+" "+str(fuzzy_items),ip)       
+                   #str(int(time))+"_"+
+                   intent_from_template_folder = str(random.randint(1,10000)+i)+"_"+test_pack.split("/")[0]+"_"+test_pack.split(".")[-1]+"_"+tem_file.split("/")[-1].split(".tem")[0]
+                   i+=1
+                   previous_location = os.getcwd()
+                   os.mkdir(intent_from_template_folder)
+                   os.chdir(intent_from_template_folder)
+                   for i in range(len(fuzzy_intents)):
+                       filename = "intent_from_template"+str(i)
+                       with open(filename,"w") as f:
+                           f.write(fuzzy_intents[i])
+                       os.system("chmod 777 "+filename)
+                       #os.system("adb -s %s push "% (ip)+" "+filename+" /data/data/")
+                       os.system("adb -s %s push "% (ip)+" "+filename+" /sdcard/")
+                       #os.system("adb -s %s shell sh /data/data/%s"%(ip,filename))
+                       os.system("adb -s %s shell sh /sdcard/%s"%(ip,filename))
+                       os.system("adb -s %s shell log -p f -t %s" % (ip, str(fuzzy_intents[i])))
+                   os.chdir(previous_location)
            loop = False
+           
            
         #quit
         elif (str(choice) in ['q', 'Q']):
@@ -302,5 +335,5 @@ file containing the intents:  "))
             loop = False
         elif (choice != ""):
             print("\nYour option is invalid. Please type any number \
-between 1 and 7, or Q for Quit")
+between 1 and 9, or Q for Quit")
             choice = str(raw_input("Insert your choice:    "))

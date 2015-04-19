@@ -237,8 +237,6 @@ def reproducibility(intents_f, partial_name, crashed_intent):
     return True
 
 
-
-
 def get_apks_list(ip, apk_names):
     '''
     Get all the apks from the DUT or only the ones selected by the user
@@ -249,7 +247,6 @@ def get_apks_list(ip, apk_names):
     apps_list = output.split("\r\n")
     for apk_name in apk_names:
         match_apps = [app for app in apps_list if apk_name.lower in app.lower]
-
 
 
 def get_apks(ip, package_name):
@@ -350,3 +347,46 @@ def parse_string_for_lists(string_input,ip):
             #print gen_string
             output.append(gen_string)
     return output
+
+def fill_default_values(parameter):
+    '''
+    Get the standard categories, extra_keys, extra_types,
+    flags and actions.
+    '''
+    global activity_actions
+    global categories
+    global extra_keys
+    global extra_types
+    global flags
+    
+    global path_txt
+    path_txt = os.getcwd() + "/txts/"
+	
+    if parameter=="cat":
+        with open(path_txt + "categories.txt") as f:
+            categories = f.read().splitlines()
+        return categories
+        
+    elif parameter=="ek":
+        with open(path_txt + "extra_keys.txt") as f:
+            extra_keys = f.read().splitlines()
+        return extra_keys
+        
+    elif parameter=="et":
+        with open(path_txt + "extra_types.txt") as f:
+            extra_types = f.read().splitlines()
+        return extra_types
+        
+    elif parameter=="flag":
+        with open(path_txt + "flags.txt") as f:
+            flags = f.read().splitlines()
+        for i in range(len(flags)):
+            index_fl = flags[i].index(':')
+            if index_fl > 0:
+                flags[i] = flags[i][index_fl + 1:]
+        return flags
+        
+    elif parameter=="act":
+        with open(path_txt + "activity_actions.txt") as f:
+            activity_actions = f.read().splitlines()
+        return activity_actions
