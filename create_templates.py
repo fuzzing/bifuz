@@ -85,6 +85,6 @@ for session in range(7):
 		#myStr will keep the index of the file converted in binary: e.g. 000000
 		myStr = str(bin(i)[2:].zfill(6))
 		if myStr.count("0") == session:
-			os.system("cp templates/tem_%s.tem session%s"%(myStr,session))
+			os.system("cp templates/tem_%s.tem session_%s"%(myStr,session))
 if ok:
 	print("All testing session folders have been created")
