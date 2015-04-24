@@ -56,7 +56,6 @@ for nr in range(64):
 		flag_status = "nofuzz"
 	else:
 		flag_status = "fuzz"
-	#print a_status, c_status, duri_status, ek_status, ev_status
 	
 	with open(path_to_templates+"/tem_%s.tem"%index,'w') as t:
 		t.write(raw[0])
@@ -68,3 +67,24 @@ for nr in range(64):
 		t.write(raw[6].replace("flag", "flag "+flag_status))
 
 print "All raw templates have been generated"
+
+
+#session0 folder contains the tem_111111.tem file - with 0 0s in its name
+#session1 folder contains the tem_011111.tem, tem_101111.tem, tem_110111.tem and so on up to tem_111110.tem file - with 1 0s in its name
+#...
+#session6 folder contains the tem_000000.tem - with 6 0s in its name
+
+ok=True
+for session in range(7):
+	if os.path.isdir("session_%s"%(str(session))):
+		print "Folder session_%s was already created. Please remove it first"%(str(session))
+		ok=False
+		break
+	os.mkdir("session_%s"%(str(session)))
+	for i in range(64):
+		#myStr will keep the index of the file converted in binary: e.g. 000000
+		myStr = str(bin(i)[2:].zfill(6))
+		if myStr.count("0") == session:
+			os.system("cp templates/tem_%s.tem session%s"%(myStr,session))
+if ok:
+	print("All testing session folders have been created")
