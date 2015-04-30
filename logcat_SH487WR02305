@@ -1,0 +1,7 @@
+--------- beginning of /dev/log/system
+04-20 00:53:40.551 F/ActivityManager( 1016): Service ServiceRecord{436ca830 u0 com.google.android.music/.preferences.MusicPreferenceService$MusicPreferenceServiceBinder} in process ProcessRecord{43498268 9006:com.google.android.music:main/u0a161} not same as in map: null
+04-20 00:53:41.231 F/ActivityManager( 1016): Service ServiceRecord{41b92268 u0 com.google.android.music/.net.NetworkMonitor} in process ProcessRecord{43498268 9006:com.google.android.music:main/u0a161} not same as in map: null
+--------- beginning of /dev/log/main
+04-20 00:53:55.691 F/ActivityManager( 1016): Service ServiceRecord{43d0a158 u0 com.facebook.katana/com.facebook.fbservice.service.DefaultBlueService} in process ProcessRecord{4307c320 10338:com.facebook.katana/u0a25} not same as in map: null
+04-20 00:55:23.481 F/ActivityManager( 1016): Service ServiceRecord{42f98cd0 u0 com.facebook.katana/com.facebook.fbservice.service.DefaultBlueService} in process ProcessRecord{42df4210 11155:com.facebook.katana/u0a25} not same as in map: null
+04-20 00:59:31.391 F/ActivityManager( 1016): Service ServiceRecord{43867bf8 u0 com.google.android.gms/.usagereporting.service.UsageReportingService} in process ProcessRecord{42931940 13847:com.google.android.gms/u0a28} not same as in map: null

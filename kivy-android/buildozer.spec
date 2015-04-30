@@ -57,6 +57,9 @@ fullscreen = 1
 
 # (list) Permissions
 #android.permissions = INTERNET
+android.permission.READ_LOGS
+android.permission.DUMP
+android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY
 
 # (int) Android API to use
 #android.api = 14

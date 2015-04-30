@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = My Application
+title = Bifuz
 
 # (str) Package name
-package.name = myapp
+package.name = bifuz
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.test
@@ -57,6 +57,8 @@ fullscreen = 1
 
 # (list) Permissions
 #android.permissions = INTERNET
+android.permission.READ_LOGS
+android.permission.DUMP
 
 # (int) Android API to use
 #android.api = 14

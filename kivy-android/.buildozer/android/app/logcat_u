@@ -1,0 +1,9 @@
+adb server is out of date.  killing...
+* daemon started successfully *
+--------- beginning of /dev/log/system
+04-21 14:21:34.113 F/ActivityManager( 1016): Service ServiceRecord{436e1278 u0 com.facebook.katana/com.facebook.fbservice.service.DefaultBlueService} in process ProcessRecord{42ba8310 6829:com.facebook.katana/u0a25} not same as in map: null
+04-21 14:22:02.693 F/ActivityManager( 1016): Service ServiceRecord{43bfbd80 u0 com.facebook.katana/com.facebook.fbservice.service.DefaultBlueService} in process ProcessRecord{435a8ad0 7694:com.facebook.katana/u0a25} not same as in map: null
+04-21 14:22:33.233 F/ActivityManager( 1016): Service ServiceRecord{433ad5c0 u0 com.facebook.katana/com.facebook.fbservice.service.DefaultBlueService} in process ProcessRecord{42b7f348 8349:com.facebook.katana/u0a25} not same as in map: null
+--------- beginning of /dev/log/main
+04-21 14:24:46.623 F/ActivityManager( 1016): Service ServiceRecord{434d4450 u0 com.facebook.katana/com.facebook.fbservice.service.DefaultBlueService} in process ProcessRecord{42e24768 9842:com.facebook.katana/u0a25} not same as in map: null
+04-21 14:25:34.023 F/ActivityManager( 1016): Service ServiceRecord{438299c8 u0 com.facebook.katana/com.facebook.fbservice.service.DefaultBlueService} in process ProcessRecord{42d172f0 11009:com.facebook.katana/u0a25} not same as in map: null
