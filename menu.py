@@ -80,7 +80,7 @@ fuzzing sessions")
     print(k / 2 * " " + "6. SQL injections for specific apk.")
     print(k / 2 * " " + "7. (Future) Generate apks for specific Intent calls")
     print(k / 2 * " " + "8. Buffer overflow against Activity Manager - requires userdebug image")
-    print(k / 2 * " " + "9. (WIP) Smart fuzzing - using a template")
+    print(k / 2 * " " + "9. (WIP) Smart fuzzing - using a template - test gms package")
     print(k / 2 * " " + "Q. Quit")
     print("\n\n")
 
@@ -283,7 +283,7 @@ file containing the intents:  "))
            if str(template_edited) in ['y','Y']:
               pass
            else:
-              break
+              os.system("python create_templates.py")
            
            
            #to be implemented - test for multiple packages
