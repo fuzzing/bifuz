@@ -301,6 +301,9 @@ file containing the intents:  "))
                gms_acts = f.readlines()
                       
            template_path = str(raw_input("Insert full path to the template file(s): "))
+           if not (os.path.isdir("intents_from_%s"%(template_path.split("/")[-2]))):
+               os.mkdir("intents_from_%s"%(template_path.split("/")[-2]))
+           
            tem = getoutput("ls %s/*.tem"%template_path)
            list_tem_files = tem.split()
            i=0
@@ -309,8 +312,10 @@ file containing the intents:  "))
                for test_p in gms_acts:
                    test_pack = test_p.strip()
                    fuzzy_intents = parse_string_for_lists("am start -n "+test_pack+" "+str(fuzzy_items),ip)       
-                   #str(int(time))+"_"+
+                   os.chdir("intents_from_%s"%(template_path.split("/")[-2]))
                    intent_from_template_folder = str(random.randint(1,10000)+i)+"_"+test_pack.split("/")[0]+"_"+test_pack.split(".")[-1]+"_"+tem_file.split("/")[-1].split(".tem")[0]
+                   while (os.path.isdir(intent_from_template_folder)):
+                       intent_from_template_folder = str(random.randint(1,10000)+i)+"_"+test_pack.split("/")[0]+"_"+test_pack.split(".")[-1]+"_"+tem_file.split("/")[-1].split(".tem")[0]
                    i+=1
                    previous_location = os.getcwd()
                    os.mkdir(intent_from_template_folder)
@@ -326,6 +331,7 @@ file containing the intents:  "))
                        os.system("adb -s %s shell sh /sdcard/%s"%(ip,filename))
                        os.system("adb -s %s shell log -p f -t %s" % (ip, str(fuzzy_intents[i])))
                    os.chdir(previous_location)
+                   os.chdir("..")
            loop = False
            
            
