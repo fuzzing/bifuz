@@ -369,7 +369,7 @@ def parse_template(templateFile):
     flag_tem = lines[6]
     
     if action_tem.strip().split()[1]=="fuzz":
-		rand_size_a = random.randint(1,131071) #1, 131071
+		rand_size_a = random.randint(30,100) #1, 131071
 		action_fuzz = string_generator(rand_size_a)
     else: #nofuzz
         if len(action_tem.strip().split())<3:   #nofuzz and empty
@@ -378,7 +378,7 @@ def parse_template(templateFile):
             action_fuzz = action_tem.strip().split()[2]
     
     if category_tem.strip().split()[1]=="fuzz":
-		rand_size_c = random.randint(1,131071) #1, 131071
+		rand_size_c = random.randint(30,100) #1, 131071
 		category_fuzz = string_generator(rand_size_c)
     else:
         if len(category_tem.strip().split())<3:
@@ -387,7 +387,7 @@ def parse_template(templateFile):
             category_fuzz = category_tem.strip().split()[2]
     
     if data_uri_tem.strip().split()[1]=="fuzz":
-		rand_size_d = random.randint(1,131071) #1, 131071
+		rand_size_d = random.randint(30,100) #1, 131071
 		data_uri_fuzz = string_generator(rand_size_d)
     else:
         if len(data_uri_tem.strip().split())<3:
@@ -396,7 +396,7 @@ def parse_template(templateFile):
             data_uri_fuzz = data_uri_tem.strip().split()[2]
         
     if e_key_tem.strip().split()[1]=="fuzz":
-		rand_size_ek = random.randint(1,131071) #1, 131071
+		rand_size_ek = random.randint(30,100) #1, 131071
 		e_key_fuzz = string_generator(rand_size_ek)
     else:
         if len(e_key_tem.strip().split())<3:
@@ -405,7 +405,7 @@ def parse_template(templateFile):
             e_key_fuzz = e_key_tem.strip().split()[2]
             
     if e_val_tem.strip().split()[1]=="fuzz":
-		rand_size_ev = random.randint(1,131071) #1, 131071
+		rand_size_ev = random.randint(30,100) #1, 131071
 		e_val_fuzz = string_generator(rand_size_ev)
     else:
         if len(e_val_tem.strip().split())<3:
@@ -424,14 +424,13 @@ def parse_template(templateFile):
     #rewrite the template with the new values
     #with open(templateFile+"_up",'w') as t:
     with open(templateFile,'w') as t:
-        t.write("#Do not add lines to this template; possible options for each item: fuzz, nofuzz; if nofuzz, then a list is expected\n")
+        t.write("#Do not add lines to this template; possible options for each item: fuzz, nofuzz; if nofuzz, then a list might be expected\n")
         t.write("action "+str(action_fuzz)+"\n")
         t.write("category "+str(category_fuzz)+"\n")
         t.write("data_uri "+str(data_uri_fuzz)+"\n")
         t.write("e_key "+str(e_key_fuzz)+"\n")
         t.write("e_val "+str(e_val_fuzz)+"\n")
         t.write("flag "+str(flag_fuzz)+"\n")
-        
         
     print "Template has been rewritten"
         

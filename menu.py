@@ -323,15 +323,18 @@ file containing the intents:  "))
                    for i in range(len(fuzzy_intents)):
                        filename = "intent_from_template"+str(i)
                        with open(filename,"w") as f:
-                           f.write(fuzzy_intents[i])
+                           f.write("adb -s %s shell "%(ip)+fuzzy_intents[i])
                        os.system("chmod 777 "+filename)
                        #os.system("adb -s %s push "% (ip)+" "+filename+" /data/data/")
-                       os.system("adb -s %s push "% (ip)+" "+filename+" /sdcard/")
+                      # os.system("adb -s %s push "% (ip)+" "+filename+" /sdcard/")
                        #os.system("adb -s %s shell sh /data/data/%s"%(ip,filename))
-                       os.system("adb -s %s shell sh /sdcard/%s"%(ip,filename))
-                       os.system("adb -s %s shell log -p f -t %s" % (ip, str(fuzzy_intents[i])))
+                      # os.system("adb -s %s shell sh /sdcard/%s"%(ip,filename))
+                      # os.system("adb -s %s shell log -p f -t %s" % (ip, str(fuzzy_intents[i])))
                    os.chdir(previous_location)
                    os.chdir("..")
+           aggregate_path=os.getcwd()+"/intents_from_%s"%(template_path.split("/")[-2])+"/"
+           #os.system("echo %s"%aggregate_path)
+           os.system('for i in `find %s -name "intent_from_template*"`; do cat $i ; echo ""; done >> %s/intents_all.sh'%(aggregate_path,aggregate_path))
            loop = False
            
            
