@@ -335,6 +335,18 @@ file containing the intents:  "))
            aggregate_path=os.getcwd()+"/intents_from_%s"%(template_path.split("/")[-2])+"/"
            #os.system("echo %s"%aggregate_path)
            os.system('for i in `find %s -name "intent_from_template*"`; do cat $i ; echo ""; done >> %s/intents_all.sh'%(aggregate_path,aggregate_path))
+           #start_intent_fuzzer(ip, log_dir, generated_intents_file=None):
+           run_intents_or_not = str(raw_input("Do you want to run the generated intents? [y/n] "))
+           if str(run_intents_or_not) in ['y','Y']:
+			   print "Running the intents from file: "+str(aggregate_path)+"intents_all.sh"
+			   print "IP "+str(ip)
+			   logging_dir = str(aggregate_path)+"LOGS"
+			   os.mkdir(logging_dir)
+			   print "log_dir - "+logging_dir
+			   start_intent_fuzzer(ip, logging_dir, str(aggregate_path)+"intents_all.sh")
+			   
+           else:
+               continue
            loop = False
            
            
