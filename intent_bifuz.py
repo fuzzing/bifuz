@@ -66,7 +66,7 @@ def get_default_values():
     return True
 
 
-def parse_logcat(ip, log_filename):
+def parse_logcat(ip, log_filename, generated_intents_file):
     '''
     Parse logcat to collect errors after running an intent.
     In case of errors, call method to generate seed file.
@@ -85,6 +85,7 @@ def parse_logcat(ip, log_filename):
                 try:
                     package_name = m.group(1)
                     activity = m.group(2).strip()
+                    crashed_intent = line
                 except:
                     pass
             elif "Caused" in line:
@@ -100,13 +101,15 @@ def parse_logcat(ip, log_filename):
         return True
     if package_name and new_name:
         new_filename = re.sub('\W+', '', new_name)
-        new_filename = root_path + "/e_" + activity + "." + new_name
+        partial_name = activity + "." + new_name
+        new_filename = root_path + "/e_" + partial_name
         if new_filename in created_logfiles.keys():
             created_logfiles[new_filename] += 1
         else:
             created_logfiles[new_filename] = 1
         os.rename(log_filename, new_filename + "_" + \
            str(created_logfiles[new_filename]) + ".txt")
+        reproducibility(generated_intents_file, partial_name, crashed_intent)
     return True
 
 
@@ -288,7 +291,7 @@ def start_intent_fuzzer(ip, log_dir, generated_intents_file=None):
                 print "Unavailable device: " + ip + ". Stop."
                 return False
 
-            resp_parse = parse_logcat(ip, log_filename)
+            resp_parse = parse_logcat(ip, log_filename, generated_intents_file)
             if not resp_parse:
                 print "Device not found: " + ip + ". Stop!"
                 return False

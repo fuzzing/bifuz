@@ -22,6 +22,7 @@ def parse_logcat(ip, log_filename, generated_intents_file):
 
     root_index = log_filename.rfind('/')
     root_path = log_filename[:root_index]
+    created_logfiles = {}
     with open(log_filename, 'r') as logcat:
         error = False
         package_name = ''
@@ -48,8 +49,13 @@ def parse_logcat(ip, log_filename, generated_intents_file):
     if package_name and new_name:
         new_name = re.sub('\W+', '', new_name)
         partial_name = broadcast_to + "." + new_name
-        new_filename = root_path + "/e_" + partial_name + ".txt"
-        os.rename(log_filename, new_filename)
+        new_filename = root_path + "/e_" + partial_name
+        if new_filename in created_logfiles.keys():
+            created_logfiles[new_filename] += 1
+        else:
+            created_logfiles[new_filename] = 1
+        os.rename(log_filename, new_filename + "_" + \
+            str(created_logfiles[new_filename]) + ".txt")
         reproducibility(generated_intents_file, partial_name, crashed_intent)
     return True
 
