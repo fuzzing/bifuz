@@ -93,6 +93,18 @@ def get_package_list(ip, log_dir, selected_packages):
     return lines
 
 
+def get_root_path(intents_file):
+    '''
+    Get the root path of the intent file.
+    Used for running intents from the seed files.
+    '''
+
+    if intents_file[-1] == '/':
+        intents_file = intents_file[:-1]
+    intents_file = intents_file[:intents_file.rfind('/')]
+    return intents_file
+
+
 def log_in_logcat(ip, log):
     if "." in ip:
         log_command = "adb -s %s:5555 shell log -p f -t %s" % (ip, str(log))
@@ -223,10 +235,11 @@ def reproducibility(intents_f, partial_name, crashed_intent):
     Save all the intents up to the crashing intent in a seed file.
     '''
 
+    root_path_reproducibility = get_root_path(intents_f)
     root_index = intents_f.rfind('/all_')
     root_path = intents_f[:root_index + 1]
     all_crashes = []
-    before_crash_f = open(root_path + partial_name + ".sh", 'w')
+    before_crash_f = open(root_path_reproducibility + "/" + partial_name + ".sh", 'w')
     intents_file = open(intents_f, 'r')
     for line in intents_file:
         before_crash_f.write(line)
