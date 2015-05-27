@@ -60,7 +60,7 @@ fullscreen = 1
 android.permission.READ_LOGS
 android.permission.DUMP
 android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY
-
+android.permission.WRITE_EXTERNAL_STORAGE
 # (int) Android API to use
 #android.api = 14
 
@@ -96,7 +96,7 @@ android.p4a_dir = /home/cristina/workspace/python-for-android
 # down the build process. Allows wildcards matching, for example:
 # OUYA-ODK/libs/*.jar
 #android.add_jars = foo.jar,bar.jar,path/to/more/*.jar
-
+android.add_jars = asynctask.jar  
 # (list) List of Java files to add to the android project (can be java or a
 # directory containing the files)
 #android.add_src =

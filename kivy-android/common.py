@@ -9,7 +9,6 @@ import os
 from commands import *
 from kivy.lang import Builder
 from kivy.uix.floatlayout import FloatLayout
-
 PythonActivity = autoclass('org.renpy.android.PythonActivity')
 Intent = autoclass('android.content.Intent')
 Uri = autoclass('android.net.Uri')
@@ -18,10 +17,11 @@ ActivityInfo= autoclass("android.content.pm.ActivityInfo")
 PackageInfo= autoclass("android.content.pm.PackageInfo")
 PackageManager= autoclass("android.content.pm.PackageManager")
 Cursor=autoclass("android.database.Cursor")
-
+AsyncTask=autoclass("com/example/asynctask/MyAsyncTask")
 intents=[]
 intents_package_names=[]
 commands=[]
+
 
 def log_in_logcat(log): 
     log_command = "log -p f -t %s" % (str(log))
@@ -87,7 +87,7 @@ class Bifuz(FloatLayout):
         arrayList=[]
         mypackList=[]
         pm = PythonActivity.mActivity.getPackageManager()
-        mypackList=pm.getInstalledPackages(PackageManager.GET_RECEIVERS).toArray()       
+        mypackList=pm.getInstalledPackages(PackageManager.GET_RECEIVERS).toArray()  
         for pack in mypackList:
             arrayList.append(pack.packageName)
         self.s41.values = arrayList              
@@ -100,16 +100,18 @@ class Bifuz(FloatLayout):
         PackListReceiver=pm.getPackageInfo(text, PackageManager.GET_RECEIVERS).receivers
         if (PackListReceiver is not None):
             for pack in PackListReceiver:
-                string=pack.toString() 
-                string=string.split()
-                s=string[1].split("}")
-                action=s[0]  
-    #             PythonActivity.toastError(action)
-                receivers.append(action)
-                intent = Intent()
-                intent.setAction(action)
-    #             if (intent):
-    #                 PythonActivity.mActivity.startActivity(intent) 
+                packageName=text
+                packageClass=pack.name
+                output = getoutput("logcat -c")
+#                 log_in_logcat('BIFUZ_BROADCAST ' + ' am broadcast -n ' + packageName +'/' + packageClass)
+#                 
+                task=AsyncTask(PythonActivity.mActivity) 
+                task.execute("broadcastseed",packageName,packageClass)
+                
+#                 output = getoutput('logcat -d')
+#                 PythonActivity.toastError(output)  
+
+                receivers.append(packageClass)
             self.s42.values = receivers  
         else: 
             PythonActivity.toastError("No receivers found for this app")         
@@ -135,18 +137,23 @@ class Bifuz(FloatLayout):
         activities=[]
         pm = PythonActivity.mActivity.getPackageManager()
         PackListActivities=pm.getPackageInfo(text, PackageManager.GET_ACTIVITIES).activities 
-        for pack in PackListActivities:
-            string=pack.toString() 
-            string=string.split()
-            s=string[1].split("}")
-            action=s[0]  
-#             PythonActivity.toastError(action)
-            activities.append(action)
-            intent = Intent()
-            intent.setAction(action)
-#             if (intent):
-#                 PythonActivity.mActivity.startActivity(intent) 
-        self.s32.values = activities              
+        if (PackListActivities is not None):
+            for pack in PackListActivities:
+                packageName=text
+                packageClass=pack.name
+                PythonActivity.toastError(packageClass)  
+                activities.append(packageClass)
+                
+                log_in_logcat('BIFUZ_BROADCAST ' + ' am start -n ' + packageName +'/' + packageClass)
+                
+                task=AsyncTask(PythonActivity.mActivity) 
+                task.execute("intentseed",packageName,packageClass)
+               
+#                 output = getoutput('logcat -d')
+#                 PythonActivity.toastError(output)  
+#             self.s32.values = activities     
+        else: 
+            PythonActivity.toastError("No activities found for this app")         
 #         self.s41.bind(text=self.generate_intents)            
     
        
@@ -208,19 +215,25 @@ class Bifuz(FloatLayout):
             if (self.intent_type==0):
                 output = getoutput("logcat -c")
                 log_in_logcat('BIFUZ_BROADCAST ' + commands[index].strip())
-                PythonActivity.mActivity.sendBroadcast(intents[index])
-                log_filename = "/sdcard/log_B.txt"
-                run_result = getoutput("logcat -d > " + log_filename )    
-                output = getoutput('logcat -d')
-                PythonActivity.toastError(output)  
+                i=intents[index]
+                task=AsyncTask(PythonActivity.mActivity) 
+                task.execute("broadcastseed",str(i.getComponent().getPackageName()),str(i.getComponent().getClassName()))
+
+#                 log_filename = "/sdcard/log_B.txt"
+#                 run_result = getoutput("logcat -d > " + log_filename )    
+#                 output = getoutput('logcat -d')
+#                 PythonActivity.toastError(output)  
             else:
                 output = getoutput("logcat -c")
-                log_in_logcat('BIFUZ_INTENT ' + commands[index].strip())            
-                PythonActivity.mActivity.startActivity(intents[index])              
-                log_filename = "/sdcard/log_"+text+".txt"
-                run_result = getoutput("logcat -d > " + log_filename )
-                output = getoutput('logcat -d')
-                PythonActivity.toastError(output)  
+                log_in_logcat('BIFUZ_INTENT ' + commands[index].strip())   
+                i=intents[index]
+                task=AsyncTask(PythonActivity.mActivity) 
+                task.execute("intentseed",str(i.getComponent().getPackageName()),str(i.getComponent().getClassName()))
+         
+#                 log_filename = "/sdcard/log_"+text+".txt"
+#                 run_result = getoutput("logcat -d > " + log_filename )
+#                 output = getoutput('logcat -d')
+#                 PythonActivity.toastError(output)  
                 
                 
                 
