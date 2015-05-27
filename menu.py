@@ -89,7 +89,7 @@ fuzzing sessions")
     print(k / 2 * " " + "6. SQL injections for specific apk.")
     print(k / 2 * " " + "7. (Future) Generate apks for specific Intent calls")
     print(k / 2 * " " + "8. Buffer overflow against Activity Manager - requires userdebug image")
-    print(k / 2 * " " + "9. (WIP) Smart fuzzing - using a template")
+    print(k / 2 * " " + "9. (WIP) Smart fuzzing - using a template - test gms package")
     print(k / 2 * " " + "Q. Quit")
     print("\n\n")
 
@@ -303,7 +303,7 @@ file containing the intents:  "))
            if str(template_edited) in ['y','Y']:
               pass
            else:
-              break
+              os.system("python create_templates.py")
            
            
            #to be implemented - test for multiple packages
@@ -321,6 +321,9 @@ file containing the intents:  "))
                gms_acts = f.readlines()
                       
            template_path = str(raw_input("Insert full path to the template file(s): "))
+           if not (os.path.isdir("intents_from_%s"%(template_path.split("/")[-2]))):
+               os.mkdir("intents_from_%s"%(template_path.split("/")[-2]))
+           
            tem = getoutput("ls %s/*.tem"%template_path)
            list_tem_files = tem.split()
            i=0
@@ -329,8 +332,10 @@ file containing the intents:  "))
                for test_p in gms_acts:
                    test_pack = test_p.strip()
                    fuzzy_intents = parse_string_for_lists("am start -n "+test_pack+" "+str(fuzzy_items),ip)       
-                   #str(int(time))+"_"+
+                   os.chdir("intents_from_%s"%(template_path.split("/")[-2]))
                    intent_from_template_folder = str(random.randint(1,10000)+i)+"_"+test_pack.split("/")[0]+"_"+test_pack.split(".")[-1]+"_"+tem_file.split("/")[-1].split(".tem")[0]
+                   while (os.path.isdir(intent_from_template_folder)):
+                       intent_from_template_folder = str(random.randint(1,10000)+i)+"_"+test_pack.split("/")[0]+"_"+test_pack.split(".")[-1]+"_"+tem_file.split("/")[-1].split(".tem")[0]
                    i+=1
                    previous_location = os.getcwd()
                    os.mkdir(intent_from_template_folder)
@@ -338,14 +343,30 @@ file containing the intents:  "))
                    for i in range(len(fuzzy_intents)):
                        filename = "intent_from_template"+str(i)
                        with open(filename,"w") as f:
-                           f.write(fuzzy_intents[i])
+                           f.write("adb -s %s shell "%(ip)+fuzzy_intents[i])
                        os.system("chmod 777 "+filename)
                        #os.system("adb -s %s push "% (ip)+" "+filename+" /data/data/")
-                       os.system("adb -s %s push "% (ip)+" "+filename+" /sdcard/")
+                      # os.system("adb -s %s push "% (ip)+" "+filename+" /sdcard/")
                        #os.system("adb -s %s shell sh /data/data/%s"%(ip,filename))
-                       os.system("adb -s %s shell sh /sdcard/%s"%(ip,filename))
-                       os.system("adb -s %s shell log -p f -t %s" % (ip, str(fuzzy_intents[i])))
+                      # os.system("adb -s %s shell sh /sdcard/%s"%(ip,filename))
+                      # os.system("adb -s %s shell log -p f -t %s" % (ip, str(fuzzy_intents[i])))
                    os.chdir(previous_location)
+                   os.chdir("..")
+           aggregate_path=os.getcwd()+"/intents_from_%s"%(template_path.split("/")[-2])+"/"
+           #os.system("echo %s"%aggregate_path)
+           os.system('for i in `find %s -name "intent_from_template*"`; do cat $i ; echo ""; done >> %s/intents_all.sh'%(aggregate_path,aggregate_path))
+           #start_intent_fuzzer(ip, log_dir, generated_intents_file=None):
+           run_intents_or_not = str(raw_input("Do you want to run the generated intents? [y/n] "))
+           if str(run_intents_or_not) in ['y','Y']:
+			   print "Running the intents from file: "+str(aggregate_path)+"intents_all.sh"
+			   print "IP "+str(ip)
+			   logging_dir = str(aggregate_path)+"LOGS"
+			   os.mkdir(logging_dir)
+			   print "log_dir - "+logging_dir
+			   start_intent_fuzzer(ip, logging_dir, str(aggregate_path)+"intents_all.sh")
+			   
+           else:
+               continue
            loop = False
            
            

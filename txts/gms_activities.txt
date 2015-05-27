@@ -139,4 +139,3 @@ com.google.android.gms/.plus.sharebox.ShareBoxActivity
 com.google.android.gms/com.google.android.location.network.ConfirmAlertActivity$LocationModeChangingReceiver
 com.google.android.gms/com.google.android.location.activity.HardwareActivityRecognitionProviderService
 com.google.android.gms.people.pub.PeopleProfileActionGatewayActivity
-com.google.android.gms.ocr.SecuredCreditCardOcrActivity

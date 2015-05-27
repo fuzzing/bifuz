@@ -88,3 +88,4 @@ for session in range(7):
 			os.system("cp templates/tem_%s.tem session_%s"%(myStr,session))
 if ok:
 	print("All testing session folders have been created")
+	print("Path to the template folder: "+os.getcwd()+"/templates/ or "+os.getcwd()+"/session_n/ where n runs from 0 to 6")
