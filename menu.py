@@ -259,10 +259,15 @@ file containing the intents:  "))
                 for line in paths:
                     if (line.find('denied')==-1):
                         replaceLine('kivy-android/buildozer.spec','android.p4a_dir','android.p4a_dir = '+ line + "\n")
-                #put seed folder on device                             
-                copy_file_command='push ' + seed_folder +' /data/local/tmp/test/'
+		print "Settings for Buildozer are ready"
+                #put seed folder on device      
+		copy_txts_file_command='push ' + 'txts' +' /data/local/tmp/txts/'
+		print copy_txts_file_command		
+		print run_inadb(devices_list[0], copy_txts_file_command)                   
+                copy_file_command='push ' + seed_folder +' /sdcard/'
                 print copy_file_command
                 print run_inadb(devices_list[0], copy_file_command)
+
                 #uninstall old apk if exists
                 uninstall_command='shell pm uninstall -k ' +'org.test.bifuz'
                 print run_inadb(devices_list[0], uninstall_command)
@@ -272,8 +277,7 @@ file containing the intents:  "))
                 #start Bifuz
                 run_command='shell am start -n org.test.bifuz/org.renpy.android.PythonActivity'
                 print run_inadb(devices_list[0], run_command)
-                logcat_cmd = "adb -s %s logcat -v time *:F > logcat_%s"%(devices_list[0], devices_list[0])
-                os.system(logcat_cmd)
+             
             loop = False   
 
         #option 8
