@@ -7,7 +7,7 @@ from commands import *
 from jnius import autoclass
 
 from common import Bifuz
-
+Environment=autoclass("android.os.Environment")
 PythonActivity = autoclass('org.renpy.android.PythonActivity')
 
 class TestApp(App):
@@ -25,7 +25,6 @@ class TestApp(App):
         return Bifuz()
     
     def on_pause(self):
-      self.on_resume()
       return True
   
     def on_resume(self):

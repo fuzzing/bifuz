@@ -1,0 +1,13 @@
+package com.example.asynctask;
+
+import java.lang.Thread.UncaughtExceptionHandler;
+
+public class UnCaughtException implements UncaughtExceptionHandler {
+
+	@Override
+	public void uncaughtException(Thread thread, Throwable ex) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

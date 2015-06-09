@@ -4,9 +4,11 @@ from kivy.app import App
 from kivy.core.window import Window
 import os
 from commands import *
-
+from jnius import autoclass
 
 from common import Bifuz
+Environment=autoclass("android.os.Environment")
+PythonActivity = autoclass('org.renpy.android.PythonActivity')
 
 class TestApp(App):
     def __init__(self, **kwargs):
@@ -23,13 +25,12 @@ class TestApp(App):
         return Bifuz()
     
     def on_pause(self):
-      self.on_resume()
       return True
   
     def on_resume(self):
-#       output = getoutput('logcat -d')
-#       PythonActivity.toastError(output)  
-      return True
+#         output = getoutput('logcat -d')
+#         PythonActivity.toastError(output)  
+        return True
 
 if __name__ == '__main__':
     TestApp().run()

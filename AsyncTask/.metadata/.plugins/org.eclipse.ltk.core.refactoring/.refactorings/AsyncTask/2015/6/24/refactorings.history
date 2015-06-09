@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete element from project &apos;AsyncTask&apos;&#x0A;- Original project: &apos;AsyncTask&apos;&#x0A;- Original element: &apos;acra-4.6.1.zip&apos;" description="Delete element" element1="libs/acra-4.6.1.zip" elements="0" flags="589830" id="org.eclipse.jdt.ui.delete" resources="1" stamp="1433863317267" subPackages="false" version="1.0"/>
+</session>

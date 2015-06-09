@@ -1,0 +1,99 @@
+package com.example.asynctask;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.widget.Toast;
+public class MyAsyncTask extends AsyncTask<String, Void, String> {
+
+	private Context context;
+
+	public MyAsyncTask(Context context) {
+        this.context = context;
+    }
+	
+	@Override
+	protected String doInBackground(String... params) {
+		String type;
+		if (params.length>0){
+			type=params[0];
+			Intent i=new Intent();
+			switch (type) {
+			  case "broadcast":
+				   if (params.length==2){
+					   String[] s=params[1].split(".");
+					   String packageName;
+					   for (i=0;i<s.length-1;i++)
+						   if (packageName=="")
+						   packageName=packageName + "";
+					   
+					    i.setAction(params[1]);
+						try {
+							 context.sendBroadcast(i);
+						 }
+						 catch (Exception e) {
+							 return ("Error: " + e.getMessage());
+						 }
+						return "Fuzz broadcast " +" action  " + params[1];
+				   }
+				   return "Bad Args";
+			  case "intent":
+			  		if (params.length==2){ 
+					    i.setAction(params[1]);
+						try {
+							 context.startActivity(i);
+						 }
+						 catch (Exception e) {
+							 return ("Error: " + e.getMessage());
+						 }
+						return "Fuzz intent"  +" action  " + params[1];
+			  	     }
+					 return "Bad Args";
+			  case "broadcastseed":
+				   if (params.length==3){
+					  	i.setComponent(new ComponentName(params[1], params[2]));
+						try {
+							 context.sendBroadcast(i);
+						 }
+						 catch (Exception e) {
+							 return ("Error: " + e.getMessage());
+						 }
+						return "Fuzz broadcast" + params[1] +"  " + params[2];
+				   }
+				  return "Bad Args";
+			  case "intentseed":
+				  if (params.length==3){
+					  	i.setComponent(new ComponentName(params[1], params[2]));
+						try {
+							 context.startActivity(i);
+						 }
+						 catch (Exception e) {
+							 return ("Error: " + e.getMessage());
+						 }
+						return "Fuzz intent" + params[1] +"  " + params[2];
+				   }
+				  return "Bad Args";
+			  default:
+				  return "Bad Args";
+			}
+		
+				
+			}
+			else return "Bad Args";
+		
+		
+	}
+	
+	@Override
+    protected void onPostExecute(String result) {
+    	Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+    }
+    
+    
+
+	public Integer Myfunc() {
+		return 120;
+	
+	}
+
+}
