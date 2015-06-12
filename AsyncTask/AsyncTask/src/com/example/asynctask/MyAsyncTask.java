@@ -1,7 +1,6 @@
 package com.example.asynctask;
 import java.io.File;
-import org.acra.*;
-import org.acra.annotation.*;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -16,8 +15,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
-import com.github.anrwatchdog.ANRError;
-import com.github.anrwatchdog.ANRWatchDog;
 public class MyAsyncTask extends AsyncTask<String, Void, String> {
 
 	private Context context;

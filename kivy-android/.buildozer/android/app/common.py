@@ -21,7 +21,10 @@ ActivityInfo= autoclass("android.content.pm.ActivityInfo")
 PackageInfo= autoclass("android.content.pm.PackageInfo")
 PackageManager= autoclass("android.content.pm.PackageManager")
 Cursor=autoclass("android.database.Cursor")
+
+
 AsyncTask=autoclass("com/example/asynctask/MyAsyncTask")
+
 Environment=autoclass("android.os.Environment");
 TimeUnit=autoclass("java.util.concurrent.TimeUnit")
 intents=[]
@@ -47,6 +50,8 @@ flags=[]
 #         for i in range(len(logs)):
 #             PythonActivity.toastError(logs[i])
 #   
+
+
 path_txt="txts/"
 
 with open(path_txt + "categories.txt") as f:
@@ -157,23 +162,16 @@ class Bifuz(FloatLayout):
                 command=' am broadcast -n ' + packageName +'/' + packageClass
                 seed_entry(text,command,"broadcast")
                 PythonActivity.toastError('BIFUZ_BROADCAST ' + command)
-#                 log_in_logcat('BIFUZ_BROADCAST ' + ' am broadcast -n ' + packageName +'/' + packageClass)               
                 task=AsyncTask(PythonActivity.mActivity) 
                 task.execute("broadcast",packageName,packageClass,command)
-#                 task.get(2000, TimeUnit.MILLISECONDS);
                 receivers.append(packageClass)
-                
-            self.s42.values = receivers
             filename="all_"+ "broadcast" +"_"+text+ ".sh"
             if (filename in self.s1.values):
                 filename="all_"+ "broadcast" +"_"+text+ ".sh"
             else:
                 self.s1.values.append(filename)  
-#             parse_logcat(text,"broadcast")
-        else: 
-            
+        else:           
             PythonActivity.toastError("No receivers found for this app")         
-#         self.s41.bind(text=self.generate_intents)  
     
 #     
 # # Generate Fuzzed Intent calls  
@@ -225,12 +223,8 @@ class Bifuz(FloatLayout):
                 filename="all_"+ "intent" +"_"+text+ ".sh"
             else:
                 self.s1.values.append(filename)   
-#                 output = getoutput('logcat -d')
-#                 PythonActivity.toastError(output)  
-#             self.s32.values = activities     
         else: 
-            PythonActivity.toastError("No activities found for this app")         
-#         self.s41.bind(text=self.generate_intents)            
+            PythonActivity.toastError("No activities found for this app") 
     
        
     
@@ -270,7 +264,6 @@ class Bifuz(FloatLayout):
 #         if test all
         if (text.find('Test All')>-1):
             if (self.intent_type==0):
-                
                 log_filename = "/sdcard/log_Broadcast_all.txt"
                 for int in intents:
                     log_in_logcat('BIFUZ_BROADCAST ' )                   
@@ -337,6 +330,8 @@ class Bifuz(FloatLayout):
         for pack in mypackList:
             string=pack.packageName
             if (string.find('sieve')>-1):
+#             PackListProviders=pm.getPackageInfo(string, PackageManager.GET_PROVIDERS).providers 
+#             if (PackListProviders is not None):
                 arrayList.append(pack.packageName)
         self.s51.values = arrayList              
         self.s51.bind(text=self.generate_contents_providers)
@@ -349,52 +344,53 @@ class Bifuz(FloatLayout):
         if (PackListProviders is not None):
             for pack in PackListProviders:
                 string=pack.authority 
-                paths=pack.pathPermissions
-                providers.append(string)
-        self.s52.values = providers              
-        self.s52.bind(text=self.sql_operations)  
-         
-    def sql_operations(self,spinner,text):
-        am = PythonActivity.mActivity
-        s='content://com.mwr.example.sieve.DBContentProvider/Passwords/'
-        providerInfo=am.getContentResolver
-        cursor = am.getContentResolver().query(Uri.parse(s),None,None,None,None)
-        contentResolver=am.getContentResolver().getPersistedUriPermissions().toArray()
-        if (contentResolver is not None):
-            for path in contentResolver:
-                p=path.getUri().getString()
-                PythonActivity.toastError(str(p))
-        array=cursor.getColumnNames()
-        columns=cursor.getColumnCount()
-        rows=cursor.getCount()
-     
-        
-        
-        if (cursor.moveToFirst()==True):
-            r=1
-            row_values=""
-            while (r<=rows):
-               c=1
-               while (c<columns):
-                   type=cursor.getType(c)
-                   if type == 1:
-                       value=cursor.getInt(c)
-                   elif type == 2:
-                       value=cursor.getFloat(c)
-                   elif type == 3:
-                       value=cursor.getString(c)
-                   elif  type == 4:
-                       value=cursor.getBlob(c)
-                   elif type==0: value=" "
-                   
-                   row_values=row_values + "\n" + str(value)
-                   c+=1
-               
-               r+=1
-               cursor.moveToNext()
-               row_values=row_values+ "\n"
-            PythonActivity.toastError(row_values)
-
+                path_permissions=pack.pathPermissions
+                if (path_permissions is not None):
+                    for p in path_permissions:
+                        perm=str(p.getWritePermission ())
+                        if perm is not None:
+                            PythonActivity.toastError(perm)
+                            path_parts=perm.split("WRITE_")
+                            path=path_parts[1]
+                            uri_path=path[0].upper() + path[1:].lower()
+                            am = PythonActivity.mActivity
+    #                         s='content://com.mwr.example.sieve.DBContentProvider/Keys/'
+                            s='content://'+string+'/'+uri_path +'/'
+                            PythonActivity.toastError(s)
+                            providerInfo=am.getContentResolver
+                            cursor = am.getContentResolver().query(Uri.parse(s),None,None,None,None)
+                            array=cursor.getColumnNames()
+                            columns=cursor.getColumnCount()
+                            rows=cursor.getCount()     
+                            if (cursor.moveToFirst()==True):
+                                r=1
+                                row_values=""
+                                while (r<=rows):
+                                   c=1
+                                   while (c<columns):
+                                       type=cursor.getType(c)
+                                       if type == 1:
+                                           value=cursor.getInt(c)
+                                       elif type == 2:
+                                           value=cursor.getFloat(c)
+                                       elif type == 3:
+                                           value=cursor.getString(c)
+                                       elif  type == 4:
+                                           value=cursor.getBlob(c)
+                                       elif type==0: value=" "
+                                       
+                                       row_values=row_values + "\n" + str(value)
+                                       c+=1              
+                                   r+=1
+                                   cursor.moveToNext()
+                                   row_values=row_values+ "\n"
+                                   PythonActivity.toastError(uri_path + ":" + row_values)
+                    providers.append(string)
+                
+                else:   PythonActivity.toastError("no uri_path")
+#         self.s52.values = providers              
+#         self.s52.bind(text=self.sql_operations)  
+   
         
             
 #  

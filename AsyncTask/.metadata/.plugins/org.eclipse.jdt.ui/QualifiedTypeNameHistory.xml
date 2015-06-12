@@ -17,4 +17,6 @@
 <fullyQualifiedTypeName name="android.Manifest"/>
 <fullyQualifiedTypeName name="com.github.anrwatchdog.ANRWatchDog"/>
 <fullyQualifiedTypeName name="com.example.asynctask.R.string"/>
+<fullyQualifiedTypeName name="com.example.asynctask.WatchDog"/>
+<fullyQualifiedTypeName name="com.example.test.WatchDog"/>
 </qualifiedTypeNameHistroy>

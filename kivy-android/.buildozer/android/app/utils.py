@@ -56,20 +56,16 @@ def parse_broadcast_logcat(log_filename):
 def seed_entry(log_filename,command,type):
     dir=Environment.getExternalStorageDirectory().toString()
     path=str(dir) + "/test/all_"+ type +"_"+log_filename+ ".sh"
-    path_TRACE="/data/anr/traces.txt"
     all_runs_path=str(dir) + "/test/all_"+ type + ".sh"
     if os.path.isdir(str(dir) + "/test/"):
         seedfile=open(path,'a')
-        tracefile=open(path_TRACE,'a')
         all_runs_seedfile=open(all_runs_path,'a')
     else:
         os.mkdir(str(dir)+"/test/" )
         seedfile=open(path,'a')
-        tracefile=open(path_TRACE,'a')
         all_runs_seedfile=open(all_runs_path,'a')
     if (os.path.isfile(path)):
         seedfile.write("adb shell " + command + "\n")
-        tracefile.write("BIFUZ_"+ command)
         seedfile.close()
         all_runs_seedfile.write("adb shell " + command + "\n")
         all_runs_seedfile.close()

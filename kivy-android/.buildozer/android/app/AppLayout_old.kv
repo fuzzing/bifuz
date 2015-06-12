@@ -1,0 +1,217 @@
+#:import Factory kivy.factory.Factory
+
+<MySpinnerOption@SpinnerOption>:
+    halign: 'center'
+    multiline: True
+    max_lines: 2
+    background_color: (1,0,0.7,1)
+	
+
+<Bifuz>:
+    s1:s1
+    s2:s2
+    b1:b1
+    s31:s31
+    s32:s32
+    s41:s41
+    s42:s42
+    s51:s51
+    s52:s52
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'top'
+        ScreenManager:
+            size_hint: 1, 0.8
+            id: _screen_manager
+            Screen:
+                name: 'screen1'      
+                BoxLayout:
+                    orientation:'vertical'
+                    padding: 20
+                    Label: 
+                    	multiline: True
+                        markup: True
+                        text: '[size=74][color=520415][b]Bifuz[/b][/color][/size]'
+                    Button:
+                        size_hint: 0.9, .2
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        text: "Generate Broadcast Intent calls"
+                        on_press: _screen_manager.current = 'screen4'
+                        background_color: (1,0,0.7,1)
+                    Button:
+                        size_hint: 0.9, .2
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        text: "Generate Fuzzed Intent calls"
+                        on_press: _screen_manager.current = 'screen3'
+                        background_color: (1,0,0.7,1)
+                    Button:
+                        size_hint: 0.9, .2
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        text: "Run existing generated intents from file"
+                        on_press: _screen_manager.current = 'screen2'
+                        background_color: (1,0,0.7,1)
+                    Button:
+                        size_hint: 0.9, .2
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        text: "SQL injections for specific apk"
+                        on_press: _screen_manager.current = 'screen5'
+                        background_color: (1,0,0.7,1)
+            Screen:
+                name: 'screen2'
+                
+                BoxLayout:
+                    size_hint: 1, 1
+                    orientation:'vertical'
+                    id: b1
+                    Label: 
+	                	multiline: True
+	                    markup: True
+	                    text: '[size=44][color=520415][b]Run existing generated \n intents from file  \n Select seed file and \n then select intent component[/b][/color][/size]'
+	                    halign:'center'
+                    Spinner:  
+                        id: s1
+                        multiline: True    
+                        max_lines: 2
+                        text: 'Select seed file'
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        size_hint:0.9, 0.3
+                        background_color: (1,0,0.7,1)
+                        self: root.parse_directory()
+                    Spinner:  
+                    	multiline: True
+                    	max_lines: 2
+                        id: s2    
+                        text: 'Select intent component'
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        size_hint:0.9, 0.3
+                        option_cls: Factory.get("MySpinnerOption")
+                        background_color: (1,0,0.7,1)
+                        
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint: 0.3, .2
+                        pos_hint:{'center_x': .5, 'center_y': .9}
+                        Button:
+                        	valign:'bottom'
+                            text: 'Back'
+                            on_press: _screen_manager.current = 'screen1'
+                            background_color: (1,0,0.7,1)
+            Screen:
+                name: 'screen3'
+                
+                BoxLayout:
+                    size_hint: 1, 1
+                    orientation:'vertical'
+                    id: b1
+                    Label: 
+	                	multiline: True
+	                    markup: True
+	                    text: '[size=44][color=520415][b]Generate Fuzzed \n Intent calls  \n \n Select package name and \n then  select the activity[/b][/color][/size]'
+	                    halign:'center'
+	                Spinner:  
+                    	multiline: True
+                    	max_lines: 2
+                        id: s31    
+                        text: 'Select package to test'
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        size_hint:0.9, 0.3
+                        option_cls: Factory.get("MySpinnerOption")
+                        background_color: (1,0,0.7,1)
+                        self: root.get_all_Activities_packages()
+                    Spinner:  
+                    	multiline: True
+                    	max_lines: 2
+                        id: s32    
+                        text: 'Select activity to test intent'
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        size_hint:0.9, 0.3
+                        option_cls: Factory.get("MySpinnerOption")
+                        background_color: (1,0,0.7,1)
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint: 0.3, .2
+                        pos_hint:{'center_x': .5, 'center_y': .9}
+                        Button:
+                        	valign:'bottom'
+                            text: 'Back'
+                            on_press: _screen_manager.current = 'screen1'
+                            background_color: (1,0,0.7,1)
+            Screen:
+                name: 'screen4'
+                
+                BoxLayout:
+                    size_hint: 1, 1
+                    orientation:'vertical'
+                    Label: 
+	                	multiline: True
+	                    markup: True
+	                    text: '[size=44][color=520415][b]Generate Broadcast \n Intent calls  \n \n Select package name and  \n then select receiver activity[/b][/color][/size]'
+	                    halign:'center'
+                    Spinner:  
+                    	multiline: True
+                    	max_lines: 2
+                        id: s41    
+                        text: 'Select package to test Broadcast'
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        size_hint:0.9, 0.3
+                        option_cls: Factory.get("MySpinnerOption")
+                        background_color: (1,0,0.7,1)
+                        self: root.get_all_Broadcast_packages()
+                    Spinner:  
+                    	multiline: True
+                    	max_lines: 2
+                        id: s42    
+                        text: 'Select receiver to broadcast'
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        size_hint:0.9, 0.3
+                        option_cls: Factory.get("MySpinnerOption")
+                        background_color: (1,0,0.7,1)
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint: 0.3, .2
+                        pos_hint:{'center_x': .5, 'center_y': .9}
+                        Button:
+                        	valign:'bottom'
+                            text: 'Back'
+                            on_press: _screen_manager.current = 'screen1'
+                            background_color: (1,0,0.7,1)
+                      
+            Screen:
+                name: 'screen5'
+                
+                BoxLayout:
+                    size_hint: 1, 1
+                    orientation:'vertical'
+                    Label: 
+	                	multiline: True
+	                    markup: True
+	                    text: '[size=44][color=520415][b]SQL injections for specific apk[/b][/color][/size]'
+	                    halign:'center'
+                    Spinner:  
+                    	multiline: True
+                    	max_lines: 2
+                        id: s51    
+                        text: 'Select package to test SQL'
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        size_hint:0.9, 0.3
+                        option_cls: Factory.get("MySpinnerOption")
+                        background_color: (1,0,0.7,1)
+                        self: root.get_all_Providers_packages()
+                    Spinner:  
+                    	multiline: True
+                    	max_lines: 2
+                        id: s52    
+                        text: 'Select content provider'
+                        pos_hint:{'center_x': .5, 'center_y': .5}
+                        size_hint:0.9, 0.3
+                        option_cls: Factory.get("MySpinnerOption")
+                        background_color: (1,0,0.7,1)
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint: 0.3, .2
+                        pos_hint:{'center_x': .5, 'center_y': .9}
+                        Button:
+                        	valign:'bottom'
+                            text: 'Back'
+                            on_press: _screen_manager.current = 'screen1'
+                            background_color: (1,0,0.7,1)       

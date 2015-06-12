@@ -25,8 +25,8 @@
 	<section name="CleanDialogSettings">
 		<item value="583" key="DIALOG_WIDTH"/>
 		<item value="166" key="DIALOG_Y_ORIGIN"/>
-		<item value="434" key="DIALOG_X_ORIGIN"/>
 		<item value="421" key="DIALOG_HEIGHT"/>
+		<item value="434" key="DIALOG_X_ORIGIN"/>
 		<item value="true" key="TOGGLE_SELECTED"/>
 	</section>
 </section>

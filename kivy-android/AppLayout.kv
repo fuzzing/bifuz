@@ -12,11 +12,8 @@
     s2:s2
     b1:b1
     s31:s31
-    s32:s32
     s41:s41
-    s42:s42
     s51:s51
-    s52:s52
     AnchorLayout:
         anchor_x: 'center'
         anchor_y: 'top'
@@ -106,7 +103,7 @@
                     Label: 
 	                	multiline: True
 	                    markup: True
-	                    text: '[size=44][color=520415][b]Generate Fuzzed \n Intent calls  \n \n Select package name and \n then  select the activity[/b][/color][/size]'
+	                    text: '[size=44][color=520415][b]Generate Fuzzed \n Intent calls  \n \n Select package name\n [/b][/color][/size]'
 	                    halign:'center'
 	                Spinner:  
                     	multiline: True
@@ -118,15 +115,6 @@
                         option_cls: Factory.get("MySpinnerOption")
                         background_color: (1,0,0.7,1)
                         self: root.get_all_Activities_packages()
-                    Spinner:  
-                    	multiline: True
-                    	max_lines: 2
-                        id: s32    
-                        text: 'Select activity to test intent'
-                        pos_hint:{'center_x': .5, 'center_y': .5}
-                        size_hint:0.9, 0.3
-                        option_cls: Factory.get("MySpinnerOption")
-                        background_color: (1,0,0.7,1)
                     BoxLayout:
                         orientation: 'horizontal'
                         size_hint: 0.3, .2
@@ -145,7 +133,7 @@
                     Label: 
 	                	multiline: True
 	                    markup: True
-	                    text: '[size=44][color=520415][b]Generate Broadcast \n Intent calls  \n \n Select package name and  \n then select receiver activity[/b][/color][/size]'
+	                    text: '[size=44][color=520415][b]Generate Broadcast \n Intent calls  \n \n Select package name  \n [/b][/color][/size]'
 	                    halign:'center'
                     Spinner:  
                     	multiline: True
@@ -157,15 +145,6 @@
                         option_cls: Factory.get("MySpinnerOption")
                         background_color: (1,0,0.7,1)
                         self: root.get_all_Broadcast_packages()
-                    Spinner:  
-                    	multiline: True
-                    	max_lines: 2
-                        id: s42    
-                        text: 'Select receiver to broadcast'
-                        pos_hint:{'center_x': .5, 'center_y': .5}
-                        size_hint:0.9, 0.3
-                        option_cls: Factory.get("MySpinnerOption")
-                        background_color: (1,0,0.7,1)
                     BoxLayout:
                         orientation: 'horizontal'
                         size_hint: 0.3, .2
@@ -197,15 +176,6 @@
                         option_cls: Factory.get("MySpinnerOption")
                         background_color: (1,0,0.7,1)
                         self: root.get_all_Providers_packages()
-                    Spinner:  
-                    	multiline: True
-                    	max_lines: 2
-                        id: s52    
-                        text: 'Select content provider'
-                        pos_hint:{'center_x': .5, 'center_y': .5}
-                        size_hint:0.9, 0.3
-                        option_cls: Factory.get("MySpinnerOption")
-                        background_color: (1,0,0.7,1)
                     BoxLayout:
                         orientation: 'horizontal'
                         size_hint: 0.3, .2

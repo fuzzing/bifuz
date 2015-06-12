@@ -1,0 +1,74 @@
+package com.example.test;
+
+import com.android.uiautomator.core.UiDevice;
+import com.android.uiautomator.core.UiObject;
+import com.android.uiautomator.core.UiObjectNotFoundException;
+import com.android.uiautomator.core.UiSelector;
+import com.android.uiautomator.core.UiWatcher;
+
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+public class MainActivity extends ActionBarActivity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+//		WatchDog w= new WatchDog(this);
+//		try {
+//			w.testWatcherDemoTestExample1();
+//		} catch (UiObjectNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		UiWatcher okCancelDialogWatcher = new UiWatcher() {
+			@Override
+			public boolean checkForCondition() {
+				UiObject okCancelDialog = new UiObject(new UiSelector().textStartsWith("the process"));
+				if(okCancelDialog.exists()){
+					Log.w("AAA", "Found the example OK/Cancel dialog");
+					UiObject okButton = new UiObject(new UiSelector().className("android.widget.Button").text("OK"));
+					try {
+						okButton.click();
+					} catch (UiObjectNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					return (okCancelDialog.waitUntilGone(25000));
+				}
+				return false;
+			}
+		};
+		
+		// Register watcher
+		UiDevice.getInstance().registerWatcher("MYOKCANCELDIALOGWATCHER_STRING", okCancelDialogWatcher);
+
+		// Run watcher
+		UiDevice.getInstance().runWatchers();
+		
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+}

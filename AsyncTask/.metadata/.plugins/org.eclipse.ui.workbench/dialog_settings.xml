@@ -22,8 +22,8 @@
 		<item value="374" key="DIALOG_WIDTH"/>
 		<item value="com.android.ide.eclipse.ddms.views.LogCatView" key="ShowViewDialog.STORE_SELECTED_VIEW_ID"/>
 		<item value="96" key="DIALOG_Y_ORIGIN"/>
-		<item value="463" key="DIALOG_X_ORIGIN"/>
 		<item value="443" key="DIALOG_HEIGHT"/>
+		<item value="463" key="DIALOG_X_ORIGIN"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<list key="ShowViewDialog.STORE_EXPANDED_CATEGORIES_ID">
 			<item value="com.android.ide.eclipse.ddms.views.category"/>

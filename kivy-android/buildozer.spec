@@ -97,7 +97,7 @@ android.p4a_dir = /home/cristina/workspace/python-for-android
 # down the build process. Allows wildcards matching, for example:
 # OUYA-ODK/libs/*.jar
 #android.add_jars = foo.jar,bar.jar,path/to/more/*.jar
-android.add_jars = asynctask.jar  
+android.add_jars = asynctask.jar,uiautomator.jar  
 # (list) List of Java files to add to the android project (can be java or a
 # directory containing the files)
 #android.add_src =
