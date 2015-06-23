@@ -19,4 +19,7 @@
 <fullyQualifiedTypeName name="com.example.asynctask.R.string"/>
 <fullyQualifiedTypeName name="com.example.asynctask.WatchDog"/>
 <fullyQualifiedTypeName name="com.example.test.WatchDog"/>
+<fullyQualifiedTypeName name="java.io.BufferedReader"/>
+<fullyQualifiedTypeName name="java.io.FileWriter"/>
+<fullyQualifiedTypeName name="java.io.PrintWriter"/>
 </qualifiedTypeNameHistroy>

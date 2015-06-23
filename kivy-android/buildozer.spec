@@ -13,7 +13,7 @@ package.domain = org.test
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,txt
+source.include_exts = py,png,jpg,kv,atlas,txt,ttf
 
 # (list) Source files to exclude (let empty to not exclude anything)
 #source.exclude_exts = spec
@@ -62,6 +62,7 @@ android.permission.DUMP
 android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY
 android.permission.WRITE_EXTERNAL_STORAGE
 android.permission.INSTALL_LOCATION_PROVIDER
+android.permission.ACCESS_SUPERUSER
 # (int) Android API to use
 #android.api = 14
 
@@ -97,7 +98,7 @@ android.p4a_dir = /home/cristina/workspace/python-for-android
 # down the build process. Allows wildcards matching, for example:
 # OUYA-ODK/libs/*.jar
 #android.add_jars = foo.jar,bar.jar,path/to/more/*.jar
-android.add_jars = asynctask.jar,uiautomator.jar  
+android.add_jars = asynctask.jar
 # (list) List of Java files to add to the android project (can be java or a
 # directory containing the files)
 #android.add_src =

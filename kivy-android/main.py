@@ -15,6 +15,11 @@ class TestApp(App):
         super(TestApp, self).__init__(**kwargs)
         # Setting it up to listen for keyboard events
         Window.bind(on_keyboard=self.onBackBtn)
+        dir=Environment.getExternalStorageDirectory().toString()
+        if os.path.isdir(str(dir) + "/test/"):
+            ok=True
+        else:
+            os.mkdir(str(dir)+"/test/" )
 
     def onBackBtn(self, window, key, *args):
         """ To be called whenever user presses Back/Esc Key """
@@ -28,8 +33,6 @@ class TestApp(App):
       return True
   
     def on_resume(self):
-#         output = getoutput('logcat -d')
-#         PythonActivity.toastError(output)  
         return True
 
 if __name__ == '__main__':

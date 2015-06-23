@@ -9,6 +9,7 @@ import os
 from commands import *
 from utils import *
 from kivy.lang import Builder
+from kivy.metrics import metrics
 from kivy.uix.floatlayout import FloatLayout
 from unicodedata import category
 
@@ -35,23 +36,6 @@ extra_keys=[]
 extra_types=[]
 activity_actions=[]
 flags=[]
-# if os.path.isfile("/data/anr/traces.txt"):
-#     with open("/data/anr/traces.txt") as f:
-#         content = f.readlines()
-#         for command in content:
-#             dir=Environment.getExternalStorageDirectory().toString()
-#             path=str(dir) + "APP_TRACES.txt"
-#             trace_file=open(path,'a')
-#             if os.path.isfile(path):
-#                 trace_file.write(command)
-# else: PythonActivity.toastError("File not found")
-# with open(path_txt + "/data/anr/traces.txt") as f:
-#         logs = f.read().splitlines() 
-#         for i in range(len(logs)):
-#             PythonActivity.toastError(logs[i])
-#   
-
-
 path_txt="txts/"
 
 with open(path_txt + "categories.txt") as f:
@@ -118,15 +102,24 @@ def parse_seed_line_command(command):
             intents.append(intent)                                               
         return intent_type
  
- 
+config = PythonActivity.mActivity.getResources().getConfiguration() 
+
  
             
 Builder.load_file("AppLayout.kv")
 
 
-
 class Bifuz(FloatLayout):
-    Window.clearcolor = (0,1,1,0)
+#     Window.clearcolor = (0,1,1,0)
+    def fontscale(self):
+        dpi = metrics.dpi_rounded
+        if dpi < 140:
+            return 1
+        elif dpi < 200:
+            return 2
+        elif dpi < 280:
+            return 2.5
+        return 3
     
     
 #  
@@ -141,14 +134,13 @@ class Bifuz(FloatLayout):
         mypackList=pm.getInstalledPackages(PackageManager.GET_RECEIVERS).toArray()  
         for pack in mypackList:
             arrayList.append(pack.packageName)
-        filename="all_"+ "broadcast.sh"
-        
-        self.s1.values.append(filename) 
+            
         self.s41.values = arrayList              
         self.s41.bind(text=self.generate_intents_Receivers)
              
         
     def generate_intents_Receivers(self,spinner,text):
+        output = getoutput("logcat -c") 
         PackListReceiver=[]
         receivers=[]
         pm = PythonActivity.mActivity.getPackageManager()
@@ -159,16 +151,18 @@ class Bifuz(FloatLayout):
                 packageName=text
                 packageClass=pack.name
                 command=' am broadcast -n ' + packageName +'/' + packageClass
-                seed_entry(text,command,"broadcast")
                 PythonActivity.toastError('BIFUZ_BROADCAST ' + command)
                 task=AsyncTask(PythonActivity.mActivity) 
                 task.execute("broadcast",packageName,packageClass,command)
                 receivers.append(packageClass)
-            filename="all_"+ "broadcast" +"_"+text+ ".sh"
-            if (filename in self.s1.values):
-                filename="all_"+ "broadcast" +"_"+text+ ".sh"
-            else:
-                self.s1.values.append(filename)  
+                
+                path="/sdcard/test/"
+                for filename in glob.glob(os.path.join(path, '*.sh')):
+                    file_path=filename.split("/sdcard/test/")
+                    if file_path[1] in self.s1.values:
+                        ok=False
+                    else:    
+                        self.s1.values.append(file_path[1])
         else:           
             PythonActivity.toastError("No receivers found for this app")         
     
@@ -183,14 +177,12 @@ class Bifuz(FloatLayout):
         mypackList=pm.getInstalledPackages(PackageManager.GET_ACTIVITIES).toArray()       
         for pack in mypackList:
             arrayList.append(pack.packageName)
-        filename="all_"+ "intent.sh"
-        if (filename in self.s1.values==False):
-                self.s1.values.append(filename) 
         self.s31.values = arrayList              
         self.s31.bind(text=self.generate_intents_Activities)        
           
      #get all packages and activities
     def generate_intents_Activities(self,spinner, text):
+        output = getoutput("logcat -c") 
         PackListActivities=[]
         activities=[]
         pm = PythonActivity.mActivity.getPackageManager()
@@ -213,15 +205,16 @@ class Bifuz(FloatLayout):
                 else:
                     ev = str(random.randint(10,100))
                 command=' am start -a ' + act + ' -c ' + cat + ' -n ' + packageName +'/' + packageClass + ' -f '  + flag + ' -d ' + data +' -e ' + e_type +' '+ e_key + ' ' + ev
-                seed_entry(text,command,"intent")
                 PythonActivity.toastError('BIFUZ_INTENT ' + command)      
                 task=AsyncTask(PythonActivity.mActivity) 
                 task.execute("intent",packageName,packageClass,act,cat,flag,data,e_type,e_key,ev,command)
-            filename="all_"+ "intent" +"_"+text+ ".sh"
-            if (filename in self.s1.values):
-                filename="all_"+ "intent" +"_"+text+ ".sh"
-            else:
-                self.s1.values.append(filename)   
+                path="/sdcard/test/"
+                for filename in glob.glob(os.path.join(path, '*.sh')):
+                    file_path=filename.split("/sdcard/test/")
+                    if (file_path[1] in self.s1.values):
+                        ok=False
+                    else:    
+                        self.s1.values.append(file_path[1]) 
         else: 
             PythonActivity.toastError("No activities found for this app") 
     
@@ -237,8 +230,10 @@ class Bifuz(FloatLayout):
             path="/sdcard/test/"
             for filename in glob.glob(os.path.join(path, '*.sh')):
                 file_path=filename.split("/sdcard/test/")
-                seed_files.append(file_path[1])
-            self.s1.values = seed_files
+                if (file_path[1] in self.s1.values):
+                    ok=False
+                else:    
+                    self.s1.values.append(file_path[1])
             self.s1.bind(text=self.show_selected_value)
     
     def show_selected_value(self,spinner, text):
@@ -250,45 +245,58 @@ class Bifuz(FloatLayout):
             with open(file_path) as f:
                 content = f.readlines()
                 for command in content:
-                    c=command.split('am',1) 
-                    c[1]="am "+ c[1]
-                    commands.append(c[1])
-                    self.intent_type=parse_seed_line_command(command)
+                    if (command.find('am')>-1):
+                        c=command.split('am',1) 
+                        c[1]="am "+ c[1]
+                        commands.append(c[1])
+                        self.intent_type=parse_seed_line_command(command)
         self.s2.values=intents_package_names
         self.s2.values.insert(0, "Test All")
         self.s2.bind(text=self.run_intents)
                    
     def run_intents(self,spinner, text):
-#         output = getoutput("logcat -c") 
 #         if test all
+        output = getoutput("logcat -c") 
         if (text.find('Test All')>-1):
             if (self.intent_type==0):
-                log_filename = "/sdcard/log_Broadcast_all.txt"
-                for int in intents:
-                    log_in_logcat('BIFUZ_BROADCAST ' )                   
-                    PythonActivity.toastError("BROADCAST \n" + str(intents_package_names[intents.index(int)]))
-                    PythonActivity.mActivity.sendBroadcast(intents[intents.index(int)])                      
-            else:
-#                 output = getoutput("logcat -c")  
-                for int in intents:
-                    PythonActivity.toastError("Fuzzing \n" + str(intents_package_names[intents.index(int)]))
-                    PythonActivity.mActivity.startActivity(intents[intents.index(int)])
-                log_filename = "/sdcard/log_fuzz_all.txt"
+                for c in commands:
+                     adb_params = c.split(" "); 
+                     package=adb_params[adb_params.index("-n")+1]
+                     packageName=package.split("/")
+                     command=' am broadcast -n ' + package
+                     task=AsyncTask(PythonActivity.mActivity) 
+                     task.execute("broadcast",packageName[0],packageName[1],command)
+                     PythonActivity.toastError(command)                      
+            else: 
+                for c in commands:
+                    adb_params = c.split(" "); 
+                    package=adb_params[adb_params.index("-n")+1]
+                    packageName=package.split("/")
+                    action=adb_params[adb_params.index("-a")+1]
+                    flag=adb_params[adb_params.index("-f")+2]
+                    category=adb_params[adb_params.index("-c")+1]
+                    data=adb_params[adb_params.index("-d")+1]
+                    extra_type=adb_params[adb_params.index("-e")+1]
+                    extra_string=adb_params[adb_params.index("-e")+2]
+                    extra_value=adb_params[adb_params.index("-e")+3]
+                    task=AsyncTask(PythonActivity.mActivity) 
+                    command=' am start -a ' + action + ' -c ' + category + ' -n ' + package + ' -f '  + flag + ' -d ' + data +' -e ' + extra_type +' '+ extra_string + ' ' + extra_value
+                    task.execute("intent",packageName[0],packageName[1],action,category,flag,data,extra_type,extra_string,extra_value,command)
+                    PythonActivity.toastError(command) 
+                    
 #         for one selected line 
         else:          
             index=intents_package_names.index(text)
             if (self.intent_type==0):
-#                 output = getoutput("logcat -c")
                 adb_params = commands[index].split(" "); 
                 package=adb_params[adb_params.index("-n")+1]
                 packageName=package.split("/")
                 command=' am broadcast -n ' + package
-                log_in_logcat('BIFUZ_INTENT ' + command) 
                 task=AsyncTask(PythonActivity.mActivity) 
-                task.execute("broadcast",packageName[0],packageName[1])
+                task.execute("broadcast",packageName[0],packageName[1],command)
+                PythonActivity.toastError(command) 
 
-            else:
-#                 output = getoutput("logcat -c")          
+            else:       
                 adb_params = commands[index].split(" "); 
                 package=adb_params[adb_params.index("-n")+1]
                 packageName=package.split("/")
@@ -301,8 +309,8 @@ class Bifuz(FloatLayout):
                 extra_value=adb_params[adb_params.index("-e")+3]
                 task=AsyncTask(PythonActivity.mActivity) 
                 command=' am start -a ' + action + ' -c ' + category + ' -n ' + package + ' -f '  + flag + ' -d ' + data +' -e ' + extra_type +' '+ extra_string + ' ' + extra_value
-                PythonActivity.toastError(command)  
-                log_in_logcat('BIFUZ_INTENT ' + command)   
+                task.execute("intent",packageName[0],packageName[1],action,category,flag,data,extra_type,extra_string,extra_value,command)
+                PythonActivity.toastError(command) 
 
                 
                 
@@ -343,8 +351,8 @@ class Bifuz(FloatLayout):
                             path=path_parts[1]
                             uri_path=path[0].upper() + path[1:].lower()
                             am = PythonActivity.mActivity
-    #                         s='content://com.mwr.example.sieve.DBContentProvider/Keys/'
-                            s='content://'+string+'/'+uri_path +'/'
+                            s='content://com.mwr.example.sieve.DBContentProvider/Passwords/'
+#                             s='content://'+string+'/'+uri_path +'/'
                             PythonActivity.toastError(s)
                             providerInfo=am.getContentResolver
                             cursor = am.getContentResolver().query(Uri.parse(s),None,None,None,None)

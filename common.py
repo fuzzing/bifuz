@@ -19,6 +19,66 @@ import random
 from intent_bifuz import *
 import ast
 import itertools
+import filecmp
+import shutil
+
+
+def delete_query(device,content,table):
+	projection_query="shell content query --uri " + content + " --projection " + '"' "* FROM sqlite_master WHERE type='table';--" + '"'
+	run_inadb(device,projection_query + "> "  + os.getcwd() + "/sql_file.txt")
+	projection_query="shell content query --uri " + content + " --projection '* FROM "+table +";--'"
+	with open("sql_file.txt", 'r') as sql_file:
+        	for line in sql_file:
+			tbl_name=line.split("tbl_name=")
+			tbl_name=tbl_name[1].split(",")
+			tbl_name=tbl_name[0]		
+			if (tbl_name==table):
+				lines=line.split("(");
+				sql_param=lines[1].split(",")
+				for i in sql_param:
+					if (i.find("PRIMARY KEY")==-1):
+						i=i.split(" ")
+						name=i[0]
+						delete_query="shell content delete --uri " + content + " --where " + '"' + name + "='' or '1=1'" + '"'
+						print "adb "+ delete_query + "\n"
+						run_inadb(device,delete_query)
+						run_inadb(device,projection_query +  " > "  + os.getcwd() + "/sql_final_table.txt")
+						with open("sql_final_table.txt", 'r') as sql_file:
+							for line in sql_file:
+								print line
+								if line.find("No result found.")>-1:
+									return True	
+		return False
+
+
+def insert_query(device,content,table):
+	projection_query="shell content query --uri " + content + " --projection " + '"' "* FROM sqlite_master WHERE type='table';--" + '"'
+	run_inadb(device,projection_query + "> "  + os.getcwd() + "/sql_file.txt")
+	query="shell content query --uri " + content + " --projection '* FROM "+table +";--'"
+	run_inadb(device,query + " > "  + os.getcwd() + "/sql_initial_table.txt")
+	with open("sql_file.txt", 'r') as sql_file:
+        	for line in sql_file:
+			tbl_name=line.split("tbl_name=")
+			tbl_name=tbl_name[1].split(",")
+			tbl_name=tbl_name[0]
+			if (tbl_name==table):
+				lines=line.split("(");
+				sql_param=lines[1].split(",")
+				insert_query="shell content insert --uri " + content
+				for i in sql_param:
+					if (i.find("PRIMARY KEY")==-1):
+						i=i.split(" ")
+						name=i[0]
+						sql_type=i[1]
+						if sql_type=="BLOB":
+							insert_query=insert_query + " --bind " + name+":b:"+"NEWVALUE"  
+						elif sql_type=="TEXT":
+							insert_query=insert_query + " --bind " + name+":s:"+"NEWVALUE"
+				print "adb "+insert_query + "\n"
+				print run_inadb(device,insert_query)
+				run_inadb(device,projection_query + "> "  + os.getcwd() + "/sql_final_table.txt") 
+				return filecmp.cmp('sql_initial_table.txt', 'sql_final_table.txt')
+		return False	
 
 
 def get_devices_list():
@@ -255,7 +315,7 @@ def get_apks_list(ip, apk_names):
     Get all the apks from the DUT or only the ones selected by the user
     '''
 
-    output = run_inadb(ip, 'shell ls /system/app')
+    output = run_inadb(ip, "shell su -c 'ls /system/app'")
     #output = run_inadb(ip, 'shell ls /system/app')
     apps_list = output.split("\r\n")
     for apk_name in apk_names:
@@ -269,7 +329,7 @@ def get_apks(ip, package_name):
     Get the uris found in the application.
     '''
     # get_apks_list(ip[0])
-    command_resp = run_inadb(ip[0], "pull " + "/system/app/" + package_name + ".apk .")
+    command_resp = run_inadb(ip[0], "pull " + "/data/app/" + package_name + ".apk .")
     print command_resp
     if command_resp.startswith("Unavailable device"):
         print command_resp

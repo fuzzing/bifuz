@@ -9,4 +9,4 @@ logcat.view.colsize.Tag=133
 logcat.view.colsize.Text=674
 logcat.view.colsize.Time=156
 logcat.view.display.filters=false
-logcat.view.filters.list=name\: 's', tag\: '', text\: '', pid\: '1101', app\: '', level\: 'verbose', 
+logcat.view.filters.list=name\: 's', tag\: '', text\: '', pid\: '', app\: 'org.test.bifuz', level\: 'verbose', 

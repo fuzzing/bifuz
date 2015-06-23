@@ -2,9 +2,14 @@
 
 <MySpinnerOption@SpinnerOption>:
     halign: 'center'
+    valign: 'middle'
     multiline: True
     max_lines: 2
-    background_color: (1,0,0.7,1)
+    background_normal: 'normal.png'
+    text_size: self.width,self.height
+    font_name: "OpenSans-Semibold.ttf"
+    size_hint: 0.9, None
+    size: 100, 150
 	
 
 <Bifuz>:
@@ -17,7 +22,14 @@
     AnchorLayout:
         anchor_x: 'center'
         anchor_y: 'top'
+        canvas:
+    		Rectangle:
+	        	source: 'background.png'
+	        	pos: self.pos
+	        	size: self.size 
+        
         ScreenManager:
+        	font_name: "OpenSans-Semibold.ttf"
             size_hint: 1, 0.8
             id: _screen_manager
             Screen:
@@ -25,34 +37,47 @@
                 BoxLayout:
                     orientation:'vertical'
                     padding: 20
+                    spacing:10
                     Label: 
                     	multiline: True
                         markup: True
-                        text: '[size=74][color=520415][b]Bifuz[/b][/color][/size]'
+                        text: '[color=520415][b]Bifuz[/b][/color][/size]'
+                        font_name: "OpenSans-Semibold.ttf"
+                        halign: 'center'
+                        spacing:20
+                        size_hint: 0.9, .9
+                        font_size: 30*root.fontscale()              
                     Button:
-                        size_hint: 0.9, .2
+                        size_hint: 1, .5
                         pos_hint:{'center_x': .5, 'center_y': .5}
                         text: "Generate Broadcast Intent calls"
+                        font_name: "OpenSans-Semibold.ttf"
                         on_press: _screen_manager.current = 'screen4'
-                        background_color: (1,0,0.7,1)
+                        background_normal: 'normal.png'
                     Button:
-                        size_hint: 0.9, .2
+                        size_hint: 1, .5
                         pos_hint:{'center_x': .5, 'center_y': .5}
                         text: "Generate Fuzzed Intent calls"
+                        font_name: "OpenSans-Semibold.ttf"
                         on_press: _screen_manager.current = 'screen3'
-                        background_color: (1,0,0.7,1)
+                        background_normal: 'normal.png'
                     Button:
-                        size_hint: 0.9, .2
+                        size_hint: 1, .5
                         pos_hint:{'center_x': .5, 'center_y': .5}
                         text: "Run existing generated intents from file"
+                        text_size: self.width-20,self.height-20
+                        font_name: "OpenSans-Semibold.ttf"
+                        halign: 'center'
+    					valign: 'middle'
                         on_press: _screen_manager.current = 'screen2'
-                        background_color: (1,0,0.7,1)
+                        background_normal: 'normal.png'
                     Button:
-                        size_hint: 0.9, .2
+                        size_hint: 1, .5
                         pos_hint:{'center_x': .5, 'center_y': .5}
                         text: "SQL injections for specific apk"
+                        font_name: "OpenSans-Semibold.ttf"
                         on_press: _screen_manager.current = 'screen5'
-                        background_color: (1,0,0.7,1)
+                        background_normal: 'normal.png'
             Screen:
                 name: 'screen2'
                 
@@ -60,29 +85,45 @@
                     size_hint: 1, 1
                     orientation:'vertical'
                     id: b1
+                    spacing:10
                     Label: 
 	                	multiline: True
 	                    markup: True
-	                    text: '[size=44][color=520415][b]Run existing generated \n intents from file  \n Select seed file and \n then select intent component[/b][/color][/size]'
+	                    text: '[color=520415][b]Run existing generated \n intents from file  \n Select seed file and \n then select intent component[/b][/color][/size]'
+	                    pos_hint:{'center_x': .5, 'center_y': .2}
+	                    size_hint: 1, .5
+	                    text_size: self.width,self.height
+	                    font_size: 10*root.fontscale()    
 	                    halign:'center'
+	                    valign: 'middle'
+	                    font_name: "OpenSans-Semibold.ttf"
                     Spinner:  
                         id: s1
                         multiline: True    
-                        max_lines: 2
+                        max_lines: 3
+                        text_size: self.width,self.height
+                        font_name: "OpenSans-Semibold.ttf"
                         text: 'Select seed file'
                         pos_hint:{'center_x': .5, 'center_y': .5}
+                        halign: 'center'
+    					valign: 'middle'
                         size_hint:0.9, 0.3
-                        background_color: (1,0,0.7,1)
+                        option_cls: Factory.get("MySpinnerOption")
+                        background_normal: 'normal.png'
                         self: root.parse_directory()
                     Spinner:  
                     	multiline: True
-                    	max_lines: 2
+                    	max_lines: 3
                         id: s2    
+                        text_size: self.width,self.height
                         text: 'Select intent component'
+                        font_name: "OpenSans-Semibold.ttf"
                         pos_hint:{'center_x': .5, 'center_y': .5}
+                        halign: 'center'
+    					valign: 'middle'           
                         size_hint:0.9, 0.3
                         option_cls: Factory.get("MySpinnerOption")
-                        background_color: (1,0,0.7,1)
+                        background_normal: 'normal.png'
                         
                     BoxLayout:
                         orientation: 'horizontal'
@@ -91,8 +132,9 @@
                         Button:
                         	valign:'bottom'
                             text: 'Back'
+                            font_name: "OpenSans-Semibold.ttf"
                             on_press: _screen_manager.current = 'screen1'
-                            background_color: (1,0,0.7,1)
+                            background_normal: 'normal.png'
             Screen:
                 name: 'screen3'
                 
@@ -100,20 +142,30 @@
                     size_hint: 1, 1
                     orientation:'vertical'
                     id: b1
+                    spacing:10
                     Label: 
 	                	multiline: True
 	                    markup: True
-	                    text: '[size=44][color=520415][b]Generate Fuzzed \n Intent calls  \n \n Select package name\n [/b][/color][/size]'
+	                    text: '[color=520415][b]Generate Fuzzed \n Intent calls  \n \n Select package name\n [/b][/color][/size]'
+	                    size_hint: 1, .5
+	                    text_size: self.width,self.height
+                        font_name: "OpenSans-Semibold.ttf"
+                        font_size: 20*root.fontscale()  
 	                    halign:'center'
+	                    valign: 'middle'
 	                Spinner:  
                     	multiline: True
                     	max_lines: 2
                         id: s31    
                         text: 'Select package to test'
+                        text_size: self.width,self.height
+                        font_name: "OpenSans-Semibold.ttf"
+                        halign:'center'
+	                    valign: 'middle'
                         pos_hint:{'center_x': .5, 'center_y': .5}
                         size_hint:0.9, 0.3
                         option_cls: Factory.get("MySpinnerOption")
-                        background_color: (1,0,0.7,1)
+                        background_normal: 'normal.png'
                         self: root.get_all_Activities_packages()
                     BoxLayout:
                         orientation: 'horizontal'
@@ -122,28 +174,39 @@
                         Button:
                         	valign:'bottom'
                             text: 'Back'
+                            font_name: "OpenSans-Semibold.ttf"
                             on_press: _screen_manager.current = 'screen1'
-                            background_color: (1,0,0.7,1)
+                            background_normal: 'normal.png'
             Screen:
                 name: 'screen4'
                 
                 BoxLayout:
                     size_hint: 1, 1
                     orientation:'vertical'
+                    spacing:10
                     Label: 
 	                	multiline: True
 	                    markup: True
-	                    text: '[size=44][color=520415][b]Generate Broadcast \n Intent calls  \n \n Select package name  \n [/b][/color][/size]'
+	                    text: '[color=520415][b]Generate Broadcast \n Intent calls  \n \n Select package name  \n [/b][/color][/size]'
+	                    size_hint: 1, .5
+	                    text_size: self.width,self.height
+                        font_name: "OpenSans-Semibold.ttf"
+                        font_size: 20*root.fontscale()  
 	                    halign:'center'
+	                    valign: 'middle'
                     Spinner:  
                     	multiline: True
                     	max_lines: 2
                         id: s41    
                         text: 'Select package to test Broadcast'
+                        text_size: self.width,self.height
+                        font_name: "OpenSans-Semibold.ttf"
+                        halign:'center'
+	                    valign: 'middle'
                         pos_hint:{'center_x': .5, 'center_y': .5}
                         size_hint:0.9, 0.3
                         option_cls: Factory.get("MySpinnerOption")
-                        background_color: (1,0,0.7,1)
+                        background_normal: 'normal.png'
                         self: root.get_all_Broadcast_packages()
                     BoxLayout:
                         orientation: 'horizontal'
@@ -152,8 +215,9 @@
                         Button:
                         	valign:'bottom'
                             text: 'Back'
+                            font_name: "OpenSans-Semibold.ttf"
                             on_press: _screen_manager.current = 'screen1'
-                            background_color: (1,0,0.7,1)
+                            background_normal: 'normal.png'
                       
             Screen:
                 name: 'screen5'
@@ -161,20 +225,30 @@
                 BoxLayout:
                     size_hint: 1, 1
                     orientation:'vertical'
+                    spacing:10
                     Label: 
 	                	multiline: True
 	                    markup: True
-	                    text: '[size=44][color=520415][b]SQL injections for specific apk[/b][/color][/size]'
+	                    text: '[color=520415][b]SQL injections for specific apk[/b][/color][/size]'
+	                    text_size: self.width,self.height
+                        font_name: "OpenSans-Semibold.ttf"
+	                    size_hint: 1, .5
+	                    font_size: 20*root.fontscale()  
 	                    halign:'center'
+	                    valign: 'middle'
                     Spinner:  
                     	multiline: True
                     	max_lines: 2
                         id: s51    
                         text: 'Select package to test SQL'
+                        text_size: self.width,self.height
+                        font_name: "OpenSans-Semibold.ttf"
                         pos_hint:{'center_x': .5, 'center_y': .5}
                         size_hint:0.9, 0.3
+                        halign:'center'
+	                    valign: 'middle'
                         option_cls: Factory.get("MySpinnerOption")
-                        background_color: (1,0,0.7,1)
+                        background_normal: 'normal.png'
                         self: root.get_all_Providers_packages()
                     BoxLayout:
                         orientation: 'horizontal'
@@ -183,5 +257,6 @@
                         Button:
                         	valign:'bottom'
                             text: 'Back'
+                            font_name: "OpenSans-Semibold.ttf"
                             on_press: _screen_manager.current = 'screen1'
-                            background_color: (1,0,0.7,1)       
+                            background_normal: 'normal.png'
