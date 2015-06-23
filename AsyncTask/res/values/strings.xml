@@ -4,5 +4,6 @@
     <string name="app_name">AsyncTask</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="crash_toast_text">YOUR APP HAS FAILED</string>
 
 </resources>

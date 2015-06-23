@@ -1,3 +1,0 @@
-1431454617785	Inline local variable 'out'
-1431454632401	Extract local variable 'printWriter'
-1431454640339	Convert local variable 'printWriter' to field

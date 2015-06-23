@@ -443,6 +443,7 @@ int string abc_shareactionprovider_share_with_application 0x7f0a000e
 int string abc_toolbar_collapse_description 0x7f0a0004
 int string action_settings 0x7f0a0012
 int string app_name 0x7f0a0010
+int string crash_toast_text 0x7f0a0013
 int string hello_world 0x7f0a0011
 int style AppBaseTheme 0x7f0b00eb
 int style AppTheme 0x7f0b00ec
